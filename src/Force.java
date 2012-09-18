@@ -3,10 +3,12 @@ import java.awt.geom.Point2D;
 
 /**
  * This class represents a force applied in a specific direction and magnitude.
- * 
  * @author Robert c. Duvall
+ * modified by tyy
  */
 public class Force {
+    private static final int FULL_DEGREE = 360;
+    private static final int HALF_DEGREE = 180;
     // angle in degrees
     private double myAngle;
     // "speed" in pixels per second
@@ -21,6 +23,8 @@ public class Force {
 
     /**
      * Create a force in the given direction with the given magnitude.
+     * @param angle the angle
+     * @param magnitude the magnitude
      */
     public Force (double angle, double magnitude) {
         setDirection(angle);
@@ -30,6 +34,8 @@ public class Force {
     /**
      * Create a force whose direction and magnitude are determined by the
      * direction and distance between the two given points.
+     * @param source the source point
+     * @param target the target point
      */
     public Force (Point2D source, Point2D target) {
         double dx = target.getX() - source.getX();
@@ -40,6 +46,7 @@ public class Force {
 
     /**
      * Create a force that is identical to the given other force.
+     * @param other the other force
      */
     public Force (Force other) {
         this(other.getDirection(), other.getMagnitude());
@@ -64,6 +71,7 @@ public class Force {
      * Returns this force's magnitude relative to the given other force. More
      * formally, returns the magnitude of this force projected onto the given
      * other force.
+     * @param other the other force
      */
     public double getRelativeMagnitude (Force other) {
         return -getMagnitude()
@@ -77,6 +85,7 @@ public class Force {
      * <LI>Values less than 1 reduce the magnitude
      * <LI>Values greater than 1 increase the magnitude
      * </UL>
+     * @param change scale of change
      */
     public void scale (double change) {
         setMagnitude(getMagnitude() * change);
@@ -95,11 +104,13 @@ public class Force {
     public double getDirection () {
         // standardize between -360 and +360 (keep 360, -360, and 0 as distinct
         // values)
-        final double OFFSET = 0.001;
-        double sign = (myAngle < 0) ? 1 : -1;
-        return ((myAngle + sign * OFFSET) % 360) - sign * OFFSET;
+        final double offset = 0.001;
+        double sign = -1;
+        if (myAngle < 0) {
+            sign = 1;
+        }
+        return ((myAngle + sign * offset) % FULL_DEGREE) - sign * offset;
     }
-    
     /**
      * Returns angle.
      */
@@ -109,6 +120,7 @@ public class Force {
 
     /**
      * Returns the angle between this force and the given other force.
+     * @param other the other force
      */
     public double getAngleBetween (Force other) {
         return getDirection() - other.getDirection();
@@ -116,9 +128,10 @@ public class Force {
 
     /**
      * Adjusts this force's direction by the given change value.
+     * @param change the change
      */
     public void turn (double change) {
-        setDirection(getDirection() + change);
+        setDirection((getDirection() + change) % FULL_DEGREE);
     }
 
     /**
@@ -144,6 +157,7 @@ public class Force {
 
     /**
      * Returns a force that is the sum of this force and the given other force.
+     * @param other the other force
      */
     public void sum (Force other) {
         // double a1 = getAngle();
@@ -166,6 +180,7 @@ public class Force {
     /**
      * Returns a force that is the difference between this force and the given
      * other force.
+     * @param other the other force
      */
     public void difference (Force other) {
         other.negate();
@@ -173,15 +188,16 @@ public class Force {
     }
 
     /**
-     * Returns a force of the same magnitude, but in the opposite direction as
-     * this force.
+     * change the force to a force of the same magnitude, but in the opposite direction as
+     * the original force.
      */
     public void negate () {
-        turn(180);
+        turn(HALF_DEGREE);
     }
 
     /**
      * Returns the average of this force with the given other force.
+     * @param other the other force
      */
     public Force average (Force other) {
         return new Force((getDirection() + other.getDirection()) / 2.0,
@@ -191,14 +207,15 @@ public class Force {
     /**
      * Return true if this force has the same magnitude and direction
      * as the given other force.
+     * @param force the force
      */
     @Override
     public boolean equals (Object force) {
-        final double EPSILON = 0.000001;
+        final double epsilon = 0.000001;
         try {
             Force other = (Force) force;
-            return (Math.abs(getMagnitude() - other.getMagnitude()) < EPSILON && Math
-                    .abs(getDirection() - other.getDirection()) < EPSILON);
+            return Math.abs(getMagnitude() - other.getMagnitude()) < epsilon && Math
+                    .abs(getDirection() - other.getDirection()) < epsilon;
         }
         catch (ClassCastException e) {
             return false;
@@ -214,32 +231,38 @@ public class Force {
     }
 
     /**
-     * Returns the distance between given two points
+     * Returns the distance between given two points.
+     * @param p1 the first point
+     * @param p2 the second point
      */
     public static double distanceBetween (Point2D p1, Point2D p2) {
-        return distanceBetween(p1.getY() - p2.getX(), p1.getY() - p2.getY());
+        return distanceBetween(p1.getX() - p2.getX(), p1.getY() - p2.getY());
     }
 
     /**
-     * Returns the distance represented by the given dx and dy
+     * Returns the distance represented by the given dx and dy.
+     * @param dx change in x
+     * @param dy change in y
      */
     public static double distanceBetween (double dx, double dy) {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
     /**
-     * Returns the angle between the given two points
+     * Returns the angle between the given two points.
+     * @param p1 the first point
+     * @param p2 the second point
      */
     public static double angleBetween (Point2D p1, Point2D p2) {
         return angleBetween(p1.getY() - p2.getY(), p1.getX() - p2.getX());
     }
 
     /**
-     * Returns the angle represented by the given dx and dy
+     * Returns the angle represented by the given dx and dy.
+     * @param dx change in x
+     * @param dy change in y
      */
     public static double angleBetween (double dx, double dy) {
         return Math.toDegrees(Math.atan2(dy, dx));
     }
-    
-    
 }

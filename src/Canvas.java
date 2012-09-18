@@ -16,16 +16,25 @@ import javax.swing.Timer;
 
 /**
  * Creates an component that is a viewer onto an animation.
- * 
  * @author Robert C. Duvall
+ * modified by tyy
  */
 @SuppressWarnings("serial")
 public class Canvas extends JComponent {
+    /**
+     * no key pressed.
+     */
     public static final int NO_KEY_PRESSED = -1;
-    // animate 25 times per second if possible (in milliseconds)
+    /**
+     * 1000 milliseconds in 1 second.
+     */
     public static final int ONE_SECOND = 1000;
+    /**
+     * animate 25 times per second if possible (in milliseconds).
+     */
     public static final int FRAMES_PER_SECOND = 25;
-
+    private static final JFileChooser CHOOSER = new JFileChooser(System
+            .getProperties().getProperty("user.dir"));
     // user's game to be animated
     private Simulation myTarget;
     // drives simulation
@@ -34,13 +43,10 @@ public class Canvas extends JComponent {
     private int myLastKeyPressed;
     private Point myLastMousePosition;
     // only one so that it maintains user's preferences
-    private static final JFileChooser ourChooser = new JFileChooser(System
-            .getProperties().getProperty("user.dir"));
 
     /**
      * Initializes the canvas.
-     * 
-     * @param size
+     * @param size of the canvas
      */
     public Canvas (Dimension size) {
         // request component size
@@ -71,6 +77,7 @@ public class Canvas extends JComponent {
 
     /**
      * Take one step in the animation.
+     * @param elapsedTime how much time has elapsed
      */
     public void step (double elapsedTime) {
         myTarget.update(elapsedTime);
@@ -87,7 +94,6 @@ public class Canvas extends JComponent {
 
     /**
      * Returns the last key pressed by the player (or -1 if none pressed).
-     * 
      * @see java.awt.event.KeyEvent
      */
     public int getLastKeyPressed () {
@@ -103,11 +109,9 @@ public class Canvas extends JComponent {
 
     /**
      * Paint the contents of the canvas.
-     * 
      * Never called by you directly, instead called by Java runtime
      * when area of screen covered by this container needs to be
      * displayed (i.e., creation, uncovering, change in status)
-     * 
      * @param pen used to paint shape on the screen
      */
     @Override
@@ -145,9 +149,9 @@ public class Canvas extends JComponent {
 
     private void loadModel () {
         final Factory factory = new Factory();
-        int response = ourChooser.showOpenDialog(null);
+        int response = CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
-            factory.loadModel(myTarget, ourChooser.getSelectedFile());
+            factory.loadModel(myTarget, CHOOSER.getSelectedFile());
         }
     }
 

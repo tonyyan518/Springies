@@ -3,16 +3,16 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
-
 /**
  * @author Robert C. Duvall
+ * modified by tyy
  */
-public class Mass {
+public class Mass extends PhysicalObject {
     // state
     private static final int LEFT = 180;
     private static final int RIGHT = 0;
-    private static final int UP = 270;
-    private static final int DOWN = 90;
+    private static final int UP = 90;
+    private static final int DOWN = 270;
     private static final int BOUNCE_SCALE = 2;
     private static final double GRAVITY = 0.5;
     private static final int MASS_DIM = 16;
@@ -22,8 +22,8 @@ public class Mass {
     private int myID;
     private double myMass;
     private Force myAcceleration;
-    private Force myPrevAcc = new Force();
-    
+    private Point2D myPrevPos;
+
     /**
      * @param id Mass's id
      * @param x initial x coordinate
@@ -52,15 +52,16 @@ public class Mass {
      * @param dt change in time
      */
     public void update (Simulation canvas, double dt) {
+        myPrevPos = (Point2D)(myCenter.clone());
         applyForce(getGravity());
         applyForce(getBounce(canvas.getSize()));
         // convert force back into Mover's velocity
         getVelocity().sum(myAcceleration);
-        myPrevAcc = new Force (myAcceleration);
         myAcceleration.reset();
         // move mass by velocity
         myCenter.setLocation(myCenter.getX() + myVelocity.getXChange() * dt,
                 myCenter.getY() + myVelocity.getYChange() * dt);
+        //when mass rises, there is a reduction in Y-axis
     }
 
     /**
@@ -80,7 +81,7 @@ public class Mass {
 
     // add gravity towards bottom
     private Force getGravity () {
-        Force result = new Force(DOWN, GRAVITY);
+        Force result = new Force(UP, GRAVITY);
         return result;
     }
 
@@ -121,10 +122,6 @@ public class Mass {
      */
     public void setVelocity (double direction, double magnitude) {
         myVelocity = new Force(direction, magnitude);
-    }
-
-    public void setVelocity (Force v) {
-        myVelocity = v;
     }
 
     /**
@@ -200,17 +197,23 @@ public class Mass {
     public double getMass () {
         return myMass;
     }
-
     /**
-     * Calculate the force acting on a mass.
+     * Returns shape's previous position.
      */
-    public Force calcForce () {
-        Force f = new Force(myVelocity);
-        f.scale(myMass);
-        return f;
+    public Point2D getPrevPos() {
+        return myPrevPos;
     }
-    
-    public Force getPrevAcc() {
-        return myPrevAcc;
+    /**
+     * @param f how much to move by
+     */
+    public void move (Force f) {
+        myCenter.setLocation(myCenter.getX() + f.getXChange(),
+                myCenter.getY() - f.getYChange());
+    }
+    /**
+     * detects if the mass is moving.
+     */
+    public boolean isMoving() {
+        return !myCenter.equals(myPrevPos);
     }
 }

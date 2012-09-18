@@ -6,28 +6,26 @@ import java.util.List;
 
 /**
  * Simulates objects moving around in a bounded environment.
- * @author Robert C. Duvall
+ * @author Robert C. Duvall 
+ * modified by tyy
  */
 public class Simulation {
-    private List<Mass> myMasses;
-    private List<Spring> mySprings;
+    private List<PhysicalObject> myObjects;
     private Canvas myContainer;
 
     /**
      * Create a Canvas with the given size.
+     * @param container the canvas
      */
     public Simulation (Canvas container) {
-        myMasses = new ArrayList<Mass>();
-        mySprings = new ArrayList<Spring>();
+        myObjects = new ArrayList<PhysicalObject>();
         myContainer = container;
     }
-
-    public void add (Mass mass) {
-        myMasses.add(mass);
-    }
-
-    public void add (Spring spring) {
-        mySprings.add(spring);
+    /**
+     * @param obj a PhysicalObject to be added
+     */
+    public void add (PhysicalObject obj) {
+        myObjects.add(obj);
     }
 
     /**
@@ -35,11 +33,8 @@ public class Simulation {
      * @param pen used to paint shape on the screen
      */
     public void paint (Graphics2D pen) {
-        for (Spring s : mySprings) {
-            s.paint(pen);
-        }
-        for (Mass m : myMasses) {
-            m.paint(pen);
+        for (int i = myObjects.size() - 1; i >= 0; i--) {
+            myObjects.get(i).paint(pen);
         }
     }
 
@@ -47,17 +42,11 @@ public class Simulation {
      * Called by each step of timer, multiple times per second.
      * This should update the state of the animated shapes by just
      * a little so they appear to move over time.
+     * @param dt change in time
      */
     public void update (double dt) {
-        updateMovers(dt);
-    }
-
-    void updateMovers (double dt) {
-        for (Spring s : mySprings) {
-            s.update(this, dt);
-        }
-        for (Mass m : myMasses) {
-            m.update(this, dt);
+        for (PhysicalObject obj : myObjects) {
+            obj.update(this, dt);
         }
     }
 
@@ -68,9 +57,16 @@ public class Simulation {
         return myContainer.getSize();
     }
 
+    /**
+     * @param id the id of the Mass
+     */
     public Mass getMass (int id) {
-        for (Mass m : myMasses) {
-            if (m.match(id)) return m;
+        for (PhysicalObject obj : myObjects) {
+            if (obj instanceof Mass) {
+                if (((Mass)obj).match(id)) {
+                    return (Mass)obj;
+                }
+            }
         }
         return null;
     }

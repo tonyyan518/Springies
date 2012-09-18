@@ -5,13 +5,16 @@ import java.awt.geom.Point2D;
 
 /**
  * @author Robert C. Duvall
+ * modified by tyy
  */
-public class Spring {
-    private static final double AT_REST = 0.001;
+public class Spring extends PhysicalObject {
+    protected static final double AT_REST = 0.001;
     private Mass myStart;
     private Mass myEnd;
     private double myLength;
     private double myK;
+    private double myDx;
+    private double myDy;
     /**
      * @param start one end of the spring
      * @param end the other end of the spring
@@ -32,9 +35,9 @@ public class Spring {
         int yStart = (int) myStart.getCenter().getY();
         int xEnd = (int) myEnd.getCenter().getX();
         int yEnd = (int) myEnd.getCenter().getY();
-        double dx = xStart - xEnd;
-        double dy = yStart - yEnd;
-        double len = Math.sqrt(dx * dx + dy * dy) - myLength;
+        myDx = xStart - xEnd;
+        myDy = yStart - yEnd;
+        double len = Math.sqrt(myDx * myDx + myDy * myDy) - myLength;
 
         if (Math.abs(len) < AT_REST) {
             pen.setColor(Color.WHITE);
@@ -49,18 +52,23 @@ public class Spring {
     }
 
     /**
+     * calculate the current length of the spring.
+     */
+    public double calcCurrentLen() {
+        Point2D start = myStart.getCenter();
+        Point2D end = myEnd.getCenter();
+        myDx = start.getX() - end.getX();
+        myDy = start.getY() - end.getY();
+        return Force.distanceBetween(myDx, myDy);
+    }
+    /**
      * @param canvas the canvas
      * @param dt change in time
      */
     public void update (Simulation canvas, double dt) {
-        Point2D start = myStart.getCenter();
-        Point2D end = myEnd.getCenter();
-        double dx = start.getX() - end.getX();
-        double dy = start.getY() - end.getY();
-
         // apply hooke's law to each attached mass
-        Force f = new Force(Force.angleBetween(dx, dy), myK
-                * (myLength - Force.distanceBetween(dx, dy)));
+        Force f = new Force(Force.angleBetween(myDx, myDy), myK
+                * (myLength - calcCurrentLen()));
 
         myStart.applyForce(f);
         f.negate();

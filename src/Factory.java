@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 /**
  * @author Robert C. Duvall
+ * modified by tyy
  */
 public class Factory {
     private static final String MASS = "mass";

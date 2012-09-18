@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 
 /**
  * Creates window that can be moved, resized, and closed by the user.
- * 
  * @author Robert C. Duvall
  */
 public final class Main {
@@ -18,11 +17,10 @@ public final class Main {
 
     /**
      * Start of the program.
-     * 
      * @param args
      *        command-line arguments
      */
-    public static void main (String args[]) {
+    public static void main (String[] args) {
         Canvas display = new Canvas(SIZE);
 
         // create container that will work with Window manager
