@@ -2,6 +2,7 @@ package physicalObject;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import simulator.Simulation;
 import simulator.Vector;
@@ -57,7 +58,7 @@ public class Mass extends PhysicalObject {
     public void update (Simulation canvas, double dt) {
         myPrevPos = (Point2D)(myCenter.clone());
         applyForce(getGravity());
-        applyForce(getBounce(canvas.getSize()));
+        applyForce(getBounce(canvas.getSize(), canvas.getOrigin()));
         // convert force back into Mover's velocity
         getVelocity().sum(myAcceleration);
         myAcceleration.reset();
@@ -89,23 +90,30 @@ public class Mass extends PhysicalObject {
     }
 
     // check for move out of bounds
-    private Vector getBounce (Dimension bounds) {
+    private Vector getBounce (Dimension bounds, Point origin) {
         Vector impulse = new Vector();
-        if (getLeft() < 0) {
+        //this mass reaches the left wall
+        if (getLeft() < origin.x) {
             impulse = new Vector(RIGHT, BOUNCE_SCALE);
-            setCenter(getSize().width / 2, getCenter().getY());
+            setCenter(origin.x + getSize().width / 2, getCenter().getY());
         }
-        else if (getRight() > bounds.width) {
+        
+        //this mass reaches the right wall
+        else if (getRight() > origin.x + bounds.width) {
             impulse = new Vector(LEFT, BOUNCE_SCALE);
-            setCenter(bounds.width - getSize().width / 2, getCenter().getY());
+            setCenter(origin.x + bounds.width - getSize().width / 2, getCenter().getY());
         }
-        if (getTop() < 0) {
+        
+        //this mass reaches the top wall
+        if (getTop() < origin.y) {
             impulse = new Vector(UP, BOUNCE_SCALE);
-            setCenter(getCenter().getX(), getSize().height / 2);
+            setCenter(getCenter().getX(), origin.y + getSize().height / 2);
         }
-        else if (getBottom() > bounds.height) {
+        
+        //this mass reaches the bottom wall
+        else if (getBottom() > origin.y + bounds.height) {
             impulse = new Vector(DOWN, BOUNCE_SCALE);
-            setCenter(getCenter().getX(), bounds.height - getSize().height / 2);
+            setCenter(getCenter().getX(), origin.y + bounds.height - getSize().height / 2);
         }
         impulse.scale(getVelocity().getRelativeMagnitude(impulse));
         return impulse;
