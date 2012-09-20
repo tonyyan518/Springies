@@ -2,6 +2,7 @@ package simulator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import environment.Gravity;
 import physicalObject.Bar;
 import physicalObject.FixedMass;
 import physicalObject.Mass;
@@ -16,6 +17,7 @@ public class Factory {
     private static final String MASS = "mass";
     private static final String SPRING = "spring";
     private static final String MUSCLE = "muscle";
+    private static final String GRAVITY = "gravity";
     /**
      * @param sim the simulation
      * @param modelFile the file
@@ -32,6 +34,9 @@ public class Factory {
                     }
                     else if (type.equals(SPRING) || type.equals(MUSCLE)) {
                         sim.add(springCommand(line, sim, type));
+                    }
+                    else if (type.equals(GRAVITY)) {
+                        sim.add(gravityCommand(line));
                     }
                 }
             }
@@ -67,5 +72,11 @@ public class Factory {
             return new Bar(sim.getMass(m1), sim.getMass(m2), restLength, ks);
         }
         return new Spring(sim.getMass(m1), sim.getMass(m2), restLength, ks);
+    }
+
+    private Gravity gravityCommand (Scanner line) {
+        double dir = line.nextDouble();
+        double mag = line.nextDouble();
+        return new Gravity(dir, mag);
     }
 }
