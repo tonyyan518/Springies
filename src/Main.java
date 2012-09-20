@@ -8,7 +8,7 @@ import javax.swing.JFrame;
  */
 public final class Main {
     // constants
-    private static final Dimension SIZE = new Dimension(800, 800);
+    private static Dimension size = new Dimension(800, 800);
     private static final String TITLE = "Springies!";
 
     private Main () {
@@ -21,7 +21,7 @@ public final class Main {
      *        command-line arguments
      */
     public static void main (String[] args) {
-        Canvas display = new Canvas(SIZE);
+        Canvas display = new Canvas(size);
 
         // create container that will work with Window manager
         JFrame frame = new JFrame(TITLE);
