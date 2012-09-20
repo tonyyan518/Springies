@@ -217,11 +217,9 @@ public class Canvas extends JComponent {
             return;
         }
         mySize.setSize(mySize.width + 2*numberOfPixels, mySize.height + 2*numberOfPixels);
-        if (mySize.width >= ORIGINAL_WIDTH)
-            mySize.setSize(ORIGINAL_WIDTH, mySize.height);
-        if (mySize.height >= ORIGINAL_HEIGHT)
-            mySize.setSize(mySize.width, ORIGINAL_HEIGHT);
         changeOrigin(numberOfPixels);
+        System.out.println(originPoint);
+        System.out.println(mySize);
     }
     
     private void changeOrigin(int numberOfPixels) {
