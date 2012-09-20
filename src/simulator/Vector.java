@@ -1,3 +1,4 @@
+package simulator;
 import java.awt.geom.Point2D;
 
 
@@ -94,7 +95,7 @@ public class Vector {
     /**
      * Sets this force's magnitude to the given value.
      */
-    protected void setMagnitude (double value) {
+    public void setMagnitude (double value) {
         myMagnitude = value;
     }
 
@@ -137,7 +138,7 @@ public class Vector {
     /**
      * Sets this force's direction to the given value.
      */
-    protected void setDirection (double value) {
+    public void setDirection (double value) {
         myAngle = value;
     }
 

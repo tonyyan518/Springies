@@ -1,3 +1,6 @@
+package physicalObject;
+import simulator.Simulation;
+
 /**
  * @author tyy
  */

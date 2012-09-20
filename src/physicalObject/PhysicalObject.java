@@ -1,4 +1,6 @@
+package physicalObject;
 import java.awt.Graphics2D;
+import simulator.Simulation;
 
 /**
  * @author tyy

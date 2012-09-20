@@ -1,6 +1,12 @@
+package simulator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import physicalObject.Bar;
+import physicalObject.FixedMass;
+import physicalObject.Mass;
+import physicalObject.Muscle;
+import physicalObject.Spring;
 
 /**
  * @author Robert C. Duvall
