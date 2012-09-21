@@ -76,8 +76,8 @@ public class Factory {
     }
 
     private Gravity gravityCommand (Scanner line) {
-        double dir = line.nextDouble();
-        double mag = line.nextDouble();
-        return new Gravity(dir, mag);
+        double direction = line.nextDouble();
+        double magnitude = line.nextDouble();
+        return new Gravity(direction, magnitude);
     }
 }

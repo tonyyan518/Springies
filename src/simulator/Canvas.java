@@ -1,4 +1,5 @@
 package simulator;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -19,8 +20,9 @@ import javax.swing.Timer;
 
 /**
  * Creates an component that is a viewer onto an animation.
+ * 
  * @author Robert C. Duvall
- * modified by tyy
+ *         modified by tyy, Rex
  */
 @SuppressWarnings("serial")
 public class Canvas extends JComponent {
@@ -36,15 +38,15 @@ public class Canvas extends JComponent {
      * animate 25 times per second if possible (in milliseconds).
      */
     public static final int FRAMES_PER_SECOND = 25;
-    
+
     private final int UNIT_CHANGE_IN_PIXELS = 10;
     private final int ORIGINAL_WIDTH = 800;
     private final int ORIGINAL_HEIGHT = 800;
     private final int MINIMUM_WIDTH = 400;
     private static final JFileChooser CHOOSER = new JFileChooser(System
             .getProperties().getProperty("user.dir"));
-    //user's game to be animated
-    //a series of simulations
+    // user's game to be animated
+    // a series of simulations
     private ArrayList<Simulation> myTargets = new ArrayList<Simulation>();
     // drives simulation
     private Timer myTimer;
@@ -52,17 +54,20 @@ public class Canvas extends JComponent {
     private int myLastKeyPressed;
     // only one so that it maintains user's preferences
     private Point myLastMousePosition;
-    //the size of canvas that is to be changed by UP and DOWN keys
+    // the size of canvas that is to be changed by UP and DOWN keys
     private Dimension mySize;
-    //the x, y value of the top-left origin point
+    // the x, y value of the top-left origin point
     private Point originPoint;
-    
+    // whether the global forces file is added
+    private boolean globalForcesApplied;
 
     /**
      * Initializes the canvas.
+     * 
      * @param size of the canvas
      */
     public Canvas (Dimension size) {
+        globalForcesApplied = false;
         originPoint = new Point(0, 0);
         mySize = size;
         // request component size
@@ -79,8 +84,6 @@ public class Canvas extends JComponent {
                         step((double) FRAMES_PER_SECOND / ONE_SECOND);
                     }
                 });
-        // initialize simulation
-        //myTargets.add(new Simulation(this));
         loadModel();
     }
 
@@ -93,11 +96,12 @@ public class Canvas extends JComponent {
 
     /**
      * Take one step in the animation.
+     * 
      * @param elapsedTime how much time has elapsed
      */
     public void step (double elapsedTime) {
-        for (Simulation s: myTargets)
-        s.update(elapsedTime);
+        for (Simulation s : myTargets)
+            s.update(elapsedTime);
         // indirectly causes paint to be called
         repaint();
     }
@@ -111,6 +115,7 @@ public class Canvas extends JComponent {
 
     /**
      * Returns the last key pressed by the player (or -1 if none pressed).
+     * 
      * @see java.awt.event.KeyEvent
      */
     public int getLastKeyPressed () {
@@ -129,6 +134,7 @@ public class Canvas extends JComponent {
      * Never called by you directly, instead called by Java runtime
      * when area of screen covered by this container needs to be
      * displayed (i.e., creation, uncovering, change in status)
+     * 
      * @param pen used to paint shape on the screen
      */
     @Override
@@ -139,7 +145,7 @@ public class Canvas extends JComponent {
         int paintWidth = Math.min(mySize.width, ORIGINAL_WIDTH);
         int paintHeight = Math.min(mySize.height, ORIGINAL_HEIGHT);
         pen.fillRect(paintX, paintY, paintWidth, paintHeight);
-        for (Simulation s: myTargets)
+        for (Simulation s : myTargets)
             s.paint((Graphics2D) pen);
     }
 
@@ -173,12 +179,18 @@ public class Canvas extends JComponent {
         final Factory factory = new Factory();
         int response = CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
+            // initialize a new simulation
             myTargets.add(new Simulation(this));
-            factory.loadModel(myTargets.get(myTargets.size()-1), CHOOSER.getSelectedFile());
-            
+            factory.loadModel(myTargets.get(myTargets.size() - 1),
+                    CHOOSER.getSelectedFile());
+        }
+
+        if (!globalForcesApplied) {
             int optionalResponse = CHOOSER.showOpenDialog(null);
             if (optionalResponse == JFileChooser.APPROVE_OPTION) {
-                factory.loadModel(myTargets.get(myTargets.size()-1), CHOOSER.getSelectedFile());
+                globalForcesApplied = true;
+                factory.loadModel(myTargets.get(myTargets.size() - 1),
+                        CHOOSER.getSelectedFile());
             }
         }
     }
@@ -186,7 +198,7 @@ public class Canvas extends JComponent {
     private void clearModel () {
         myTargets.clear();
     }
-    
+
     private void manageSimulation (int keyCode) {
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
@@ -201,27 +213,28 @@ public class Canvas extends JComponent {
                 step((double) FRAMES_PER_SECOND / ONE_SECOND);
                 break;
             case KeyEvent.VK_P:
-                for (Simulation s: myTargets)
-                System.out.println(s);
+                for (Simulation s : myTargets)
+                    System.out.println(s);
                 break;
             case KeyEvent.VK_N:
-                //load another model
+                // load another model
                 loadModel();
                 break;
             case KeyEvent.VK_C:
-                //clear all models
-                int myOption = JOptionPane.showConfirmDialog(this, "You seriously want to destroy all the lovely springies?");
-                if (myOption == 0)
-                    clearModel();
+                // clear all models
+                int myOption = JOptionPane
+                        .showConfirmDialog(this,
+                                "You seriously want to destroy all the lovely springies?");
+                if (myOption == 0) clearModel();
                 break;
             case KeyEvent.VK_G:
             case KeyEvent.VK_1:
-            case KeyEvent.VK_UP: 
-                //increase in size 
+            case KeyEvent.VK_UP:
+                // increase the walled area in size
                 changeSize(UNIT_CHANGE_IN_PIXELS);
                 break;
             case KeyEvent.VK_DOWN:
-                //decrease in size
+                // decrease the walled area in size
                 changeSize(-UNIT_CHANGE_IN_PIXELS);
                 break;
             default:
@@ -229,32 +242,35 @@ public class Canvas extends JComponent {
                 break;
         }
     }
-    
+
     /**
-     * To make the size of the walled area increase by numberOfPixels on each side.
+     * To make the size of the walled area increase by numberOfPixels on each
+     * side.
+     * 
      * @param numberOfPixels
      */
-    private void changeSize(int numberOfPixels) {
-        if (mySize.width + 2*numberOfPixels <= MINIMUM_WIDTH) {
+    private void changeSize (int numberOfPixels) {
+        if (mySize.width + 2 * numberOfPixels <= MINIMUM_WIDTH) {
             System.out.println("The canvas size reaches minimum.");
             return;
         }
-        mySize.setSize(mySize.width + 2*numberOfPixels, mySize.height + 2*numberOfPixels);
+        mySize.setSize(mySize.width + 2 * numberOfPixels, mySize.height + 2
+                * numberOfPixels);
         changeOrigin(numberOfPixels);
         System.out.println(originPoint);
         System.out.println(mySize);
     }
-    
-    private void changeOrigin(int numberOfPixels) {
+
+    private void changeOrigin (int numberOfPixels) {
         originPoint.x -= numberOfPixels;
         originPoint.y -= numberOfPixels;
     }
-    
-    public Point getOrigin() {
+
+    public Point getOrigin () {
         return originPoint;
     }
-    
-    public Dimension getCanvasSize() {
+
+    public Dimension getCanvasSize () {
         return mySize;
     }
 }

@@ -12,11 +12,12 @@ import physicalObject.PhysicalObject;
 /**
  * Simulates objects moving around in a bounded environment.
  * @author Robert C. Duvall 
- * modified by tyy
+ * modified by tyy, Rex
  */
 public class Simulation {
     private List<PhysicalObject> myObjects;
-    private List<GlobalForce> myGlobalForces;
+    //the global force list contains forces global to all objects in all simulations
+    private static List<GlobalForce> myGlobalForces;
     private Canvas myContainer;
 
     /**
@@ -25,7 +26,9 @@ public class Simulation {
      */
     public Simulation (Canvas container) {
         myObjects = new ArrayList<PhysicalObject>();
-        myGlobalForces = new ArrayList<GlobalForce>();
+        //myGlobalForces list is only initialized once even there are multiple simulations
+        if (myGlobalForces == null)
+            myGlobalForces = new ArrayList<GlobalForce>();
         myContainer = container;
     }
     /**
