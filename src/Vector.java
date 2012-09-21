@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
  * @author Robert c. Duvall
  * modified by tyy
  */
-public class Force {
+public class Vector {
     private static final int FULL_DEGREE = 360;
     private static final int HALF_DEGREE = 180;
     // angle in degrees
@@ -17,7 +17,7 @@ public class Force {
     /**
      * Create a powerless force, i.e., with no magnitude.
      */
-    public Force () {
+    public Vector () {
         this(0, 0);
     }
 
@@ -26,7 +26,7 @@ public class Force {
      * @param angle the angle
      * @param magnitude the magnitude
      */
-    public Force (double angle, double magnitude) {
+    public Vector (double angle, double magnitude) {
         setDirection(angle);
         setMagnitude(magnitude);
     }
@@ -37,7 +37,7 @@ public class Force {
      * @param source the source point
      * @param target the target point
      */
-    public Force (Point2D source, Point2D target) {
+    public Vector (Point2D source, Point2D target) {
         double dx = target.getX() - source.getX();
         double dy = source.getY() - target.getY();
         setDirection(angleBetween(dx, dy));
@@ -48,7 +48,7 @@ public class Force {
      * Create a force that is identical to the given other force.
      * @param other the other force
      */
-    public Force (Force other) {
+    public Vector (Vector other) {
         this(other.getDirection(), other.getMagnitude());
     }
 
@@ -73,7 +73,7 @@ public class Force {
      * other force.
      * @param other the other force
      */
-    public double getRelativeMagnitude (Force other) {
+    public double getRelativeMagnitude (Vector other) {
         return -getMagnitude()
                 * Math.cos(Math.toRadians(getAngleBetween(other)));
     }
@@ -122,7 +122,7 @@ public class Force {
      * Returns the angle between this force and the given other force.
      * @param other the other force
      */
-    public double getAngleBetween (Force other) {
+    public double getAngleBetween (Vector other) {
         return getDirection() - other.getDirection();
     }
 
@@ -159,7 +159,7 @@ public class Force {
      * Returns a force that is the sum of this force and the given other force.
      * @param other the other force
      */
-    public void sum (Force other) {
+    public void sum (Vector other) {
         // double a1 = getAngle();
         // double a2 = other.getAngle();
         // double m1 = getMagnitude();
@@ -182,7 +182,7 @@ public class Force {
      * other force.
      * @param other the other force
      */
-    public void difference (Force other) {
+    public void difference (Vector other) {
         other.negate();
         sum(other);
     }
@@ -199,8 +199,8 @@ public class Force {
      * Returns the average of this force with the given other force.
      * @param other the other force
      */
-    public Force average (Force other) {
-        return new Force((getDirection() + other.getDirection()) / 2.0,
+    public Vector average (Vector other) {
+        return new Vector((getDirection() + other.getDirection()) / 2.0,
                 (getMagnitude() + other.getMagnitude()) / 2.0);
     }
 
@@ -213,7 +213,7 @@ public class Force {
     public boolean equals (Object force) {
         final double epsilon = 0.000001;
         try {
-            Force other = (Force) force;
+            Vector other = (Vector) force;
             return Math.abs(getMagnitude() - other.getMagnitude()) < epsilon && Math
                     .abs(getDirection() - other.getDirection()) < epsilon;
         }

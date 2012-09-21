@@ -17,11 +17,11 @@ public class Mass extends PhysicalObject {
     private static final double GRAVITY = 0.5;
     private static final int MASS_DIM = 16;
     private Point2D myCenter;
-    private Force myVelocity;
+    private Vector myVelocity;
     private Dimension mySize;
     private int myID;
     private double myMass;
-    private Force myAcceleration;
+    private Vector myAcceleration;
     private Point2D myPrevPos;
 
     /**
@@ -31,7 +31,7 @@ public class Mass extends PhysicalObject {
      * @param mass Mass's mass
      */
     public Mass (int id, double x, double y, double mass) {
-        myAcceleration = new Force();
+        myAcceleration = new Vector();
         myMass = mass;
         myID = id;
         setCenter(x, y);
@@ -68,7 +68,7 @@ public class Mass extends PhysicalObject {
      * @param f
      *        force to be applied to this mass
      */
-    public void applyForce (Force f) {
+    public void applyForce (Vector f) {
         myAcceleration.sum(f);
     }
 
@@ -80,28 +80,28 @@ public class Mass extends PhysicalObject {
     }
 
     // add gravity towards bottom
-    private Force getGravity () {
-        Force result = new Force(UP, GRAVITY);
+    private Vector getGravity () {
+        Vector result = new Vector(UP, GRAVITY);
         return result;
     }
 
     // check for move out of bounds
-    private Force getBounce (Dimension bounds) {
-        Force impulse = new Force();
+    private Vector getBounce (Dimension bounds) {
+        Vector impulse = new Vector();
         if (getLeft() < 0) {
-            impulse = new Force(RIGHT, BOUNCE_SCALE);
+            impulse = new Vector(RIGHT, BOUNCE_SCALE);
             setCenter(getSize().width / 2, getCenter().getY());
         }
         else if (getRight() > bounds.width) {
-            impulse = new Force(LEFT, BOUNCE_SCALE);
+            impulse = new Vector(LEFT, BOUNCE_SCALE);
             setCenter(bounds.width - getSize().width / 2, getCenter().getY());
         }
         if (getTop() < 0) {
-            impulse = new Force(UP, BOUNCE_SCALE);
+            impulse = new Vector(UP, BOUNCE_SCALE);
             setCenter(getCenter().getX(), getSize().height / 2);
         }
         else if (getBottom() > bounds.height) {
-            impulse = new Force(DOWN, BOUNCE_SCALE);
+            impulse = new Vector(DOWN, BOUNCE_SCALE);
             setCenter(getCenter().getX(), bounds.height - getSize().height / 2);
         }
         impulse.scale(getVelocity().getRelativeMagnitude(impulse));
@@ -111,7 +111,7 @@ public class Mass extends PhysicalObject {
     /**
      * Returns shape's velocity.
      */
-    public Force getVelocity () {
+    public Vector getVelocity () {
         return myVelocity;
     }
 
@@ -121,7 +121,7 @@ public class Mass extends PhysicalObject {
      * @param magnitude another double
      */
     public void setVelocity (double direction, double magnitude) {
-        myVelocity = new Force(direction, magnitude);
+        myVelocity = new Vector(direction, magnitude);
     }
 
     /**
@@ -179,7 +179,7 @@ public class Mass extends PhysicalObject {
     /**
      * Returns shape's acceleration.
      */
-    public Force getAcceleration () {
+    public Vector getAcceleration () {
         return myAcceleration;
     }
 
@@ -187,7 +187,7 @@ public class Mass extends PhysicalObject {
      * Sets shape's acceleration.
      * @param a acceleration
      */
-    public void setAcceleration (Force a) {
+    public void setAcceleration (Vector a) {
         myAcceleration = a;
     }
 
@@ -206,7 +206,7 @@ public class Mass extends PhysicalObject {
     /**
      * @param f how much to move by
      */
-    public void move (Force f) {
+    public void move (Vector f) {
         myCenter.setLocation(myCenter.getX() + f.getXChange(),
                 myCenter.getY() - f.getYChange());
     }

@@ -175,6 +175,7 @@ public class Canvas extends JComponent {
                 //
             case KeyEvent.VK_C:
             case KeyEvent.VK_G:
+            case KeyEvent.VK_1:
             default:
                 // good style
                 break;

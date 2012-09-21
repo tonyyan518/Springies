@@ -59,7 +59,7 @@ public class Spring extends PhysicalObject {
         Point2D end = myEnd.getCenter();
         myDx = start.getX() - end.getX();
         myDy = start.getY() - end.getY();
-        return Force.distanceBetween(myDx, myDy);
+        return Vector.distanceBetween(myDx, myDy);
     }
     /**
      * @param canvas the canvas
@@ -67,7 +67,7 @@ public class Spring extends PhysicalObject {
      */
     public void update (Simulation canvas, double dt) {
         // apply hooke's law to each attached mass
-        Force f = new Force(Force.angleBetween(myDx, myDy), myK
+        Vector f = new Vector(Vector.angleBetween(myDx, myDy), myK
                 * (myLength - calcCurrentLen()));
 
         myStart.applyForce(f);

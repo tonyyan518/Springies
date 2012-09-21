@@ -17,7 +17,7 @@ public class Bar extends Spring {
     @Override
     public void update (Simulation canvas, double dt) {
         double lenDiff = calcCurrentLen() - getLength();
-        Force bar = new Force(getStart().getCenter(), getEnd().getCenter());
+        Vector bar = new Vector(getStart().getCenter(), getEnd().getCenter());
         if (Math.abs(lenDiff) > AT_REST) {
             myStartMomentum = getSpeed(getStart());
             myEndMomentum = getSpeed(getEnd());
@@ -35,7 +35,7 @@ public class Bar extends Spring {
         return m.getVelocity().getMagnitude() * m.getMass();
     }
     private void changeVelocity(Mass m) {
-        Force v = new Force(m.getPrevPos(), m.getCenter());
+        Vector v = new Vector(m.getPrevPos(), m.getCenter());
         m.getVelocity().setDirection(-v.getAngle());
     }
 }
