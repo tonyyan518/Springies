@@ -75,11 +75,11 @@ public class Simulation {
      * Returns size (in pixels) of the game area.
      */
     public Dimension getSize () {
-        return myContainer.getCanvasSize();
+        return Canvas.getCanvasSize();
     }
     
     public Point getOrigin() {
-        return myContainer.getOrigin();
+        return Canvas.getOrigin();
     }
 
     /**

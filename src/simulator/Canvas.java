@@ -55,9 +55,9 @@ public class Canvas extends JComponent {
     // only one so that it maintains user's preferences
     private Point myLastMousePosition;
     // the size of canvas that is to be changed by UP and DOWN keys
-    private Dimension mySize;
+    private static Dimension mySize;
     // the x, y value of the top-left origin point
-    private Point originPoint;
+    private static Point originPoint;
     // whether the global forces file is added
     private boolean globalForcesApplied;
 
@@ -139,7 +139,7 @@ public class Canvas extends JComponent {
      */
     @Override
     public void paintComponent (Graphics pen) {
-        pen.setColor(Color.lightGray);
+        pen.setColor(Color.PINK);
         int paintX = Math.max(originPoint.x, 0);
         int paintY = Math.max(originPoint.y, 0);
         int paintWidth = Math.min(mySize.width, ORIGINAL_WIDTH);
@@ -230,15 +230,9 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_G:
                 for (Simulation s : myTargets)
                     s.toggleGravity();
-                break;
             case KeyEvent.VK_V:
                 for (Simulation s : myTargets)
-                    s.toggleViscosity();  
-                break;
-            case KeyEvent.VK_M:
-                for (Simulation s : myTargets)
-                    s.toggleCenterMass();  
-                break;
+                    s.toggleViscosity();            
             case KeyEvent.VK_1:
             case KeyEvent.VK_UP:
                 // increase the walled area in size
@@ -278,11 +272,11 @@ public class Canvas extends JComponent {
     }
     
 
-    public Point getOrigin () {
+    public static Point getOrigin () {
         return originPoint;
     }
 
-    public Dimension getCanvasSize () {
+    public static Dimension getCanvasSize () {
         return mySize;
     }
 }
