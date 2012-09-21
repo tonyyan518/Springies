@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.Scanner;
 import simulator.Simulation;
 import simulator.Vector;
 
@@ -43,6 +44,17 @@ public class Mass extends PhysicalObject {
         mySize = new Dimension(MASS_DIM, MASS_DIM);
     }
 
+    public static Mass createMass(Scanner line) {
+        int id = line.nextInt();
+        double x = line.nextDouble();
+        double y = line.nextDouble();
+        double mass = line.nextDouble();
+        if (mass < 0) {
+            return new FixedMass(id, x, y, mass);
+        }
+        return new Mass(id, x, y, mass);
+    }
+    
     /**
      * @param pen the pen
      */

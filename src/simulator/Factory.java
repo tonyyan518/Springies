@@ -30,7 +30,8 @@ public class Factory {
                 if (line.hasNext()) {
                     String type = line.next();
                     if (type.equals(MASS)) {
-                        sim.add(massCommand(line));
+                        //sim.add(massCommand(line));
+                        sim.add(Mass.createMass(line));
                     }
                     else if (type.equals(SPRING) || type.equals(MUSCLE)) {
                         sim.add(springCommand(line, sim, type));
