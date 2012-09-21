@@ -10,8 +10,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 
@@ -41,8 +43,9 @@ public class Canvas extends JComponent {
     private final int MINIMUM_WIDTH = 400;
     private static final JFileChooser CHOOSER = new JFileChooser(System
             .getProperties().getProperty("user.dir"));
-    // user's game to be animated
-    private Simulation myTarget;
+    //user's game to be animated
+    //a series of simulations
+    private ArrayList<Simulation> myTargets = new ArrayList<Simulation>();
     // drives simulation
     private Timer myTimer;
     // input state
@@ -77,7 +80,7 @@ public class Canvas extends JComponent {
                     }
                 });
         // initialize simulation
-        myTarget = new Simulation(this);
+        //myTargets.add(new Simulation(this));
         loadModel();
     }
 
@@ -93,7 +96,8 @@ public class Canvas extends JComponent {
      * @param elapsedTime how much time has elapsed
      */
     public void step (double elapsedTime) {
-        myTarget.update(elapsedTime);
+        for (Simulation s: myTargets)
+        s.update(elapsedTime);
         // indirectly causes paint to be called
         repaint();
     }
@@ -135,7 +139,8 @@ public class Canvas extends JComponent {
         int paintWidth = Math.min(mySize.width, ORIGINAL_WIDTH);
         int paintHeight = Math.min(mySize.height, ORIGINAL_HEIGHT);
         pen.fillRect(paintX, paintY, paintWidth, paintHeight);
-        myTarget.paint((Graphics2D) pen);
+        for (Simulation s: myTargets)
+            s.paint((Graphics2D) pen);
     }
 
     /**
@@ -168,15 +173,20 @@ public class Canvas extends JComponent {
         final Factory factory = new Factory();
         int response = CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
-            factory.loadModel(myTarget, CHOOSER.getSelectedFile());
+            myTargets.add(new Simulation(this));
+            factory.loadModel(myTargets.get(myTargets.size()-1), CHOOSER.getSelectedFile());
             
             int optionalResponse = CHOOSER.showOpenDialog(null);
             if (optionalResponse == JFileChooser.APPROVE_OPTION) {
-                factory.loadModel(myTarget, CHOOSER.getSelectedFile());
+                factory.loadModel(myTargets.get(myTargets.size()-1), CHOOSER.getSelectedFile());
             }
         }
     }
 
+    private void clearModel () {
+        myTargets.clear();
+    }
+    
     private void manageSimulation (int keyCode) {
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
@@ -191,11 +201,19 @@ public class Canvas extends JComponent {
                 step((double) FRAMES_PER_SECOND / ONE_SECOND);
                 break;
             case KeyEvent.VK_P:
-                System.out.println(myTarget);
+                for (Simulation s: myTargets)
+                System.out.println(s);
                 break;
             case KeyEvent.VK_N:
-                //
+                //load another model
+                loadModel();
+                break;
             case KeyEvent.VK_C:
+                //clear all models
+                int myOption = JOptionPane.showConfirmDialog(this, "You seriously want to destroy all the lovely springies?");
+                if (myOption == 0)
+                    clearModel();
+                break;
             case KeyEvent.VK_G:
             case KeyEvent.VK_1:
             case KeyEvent.VK_UP: 
