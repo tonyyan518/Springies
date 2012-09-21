@@ -228,6 +228,11 @@ public class Canvas extends JComponent {
                 if (myOption == 0) clearModel();
                 break;
             case KeyEvent.VK_G:
+                for (Simulation s : myTargets)
+                    s.toggleGravity();
+            case KeyEvent.VK_V:
+                for (Simulation s : myTargets)
+                    s.toggleViscosity();            
             case KeyEvent.VK_1:
             case KeyEvent.VK_UP:
                 // increase the walled area in size
@@ -265,6 +270,7 @@ public class Canvas extends JComponent {
         originPoint.x -= numberOfPixels;
         originPoint.y -= numberOfPixels;
     }
+    
 
     public Point getOrigin () {
         return originPoint;
