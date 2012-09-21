@@ -1,6 +1,7 @@
 package simulator;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import environment.GlobalForce;
@@ -68,7 +69,11 @@ public class Simulation {
      * Returns size (in pixels) of the game area.
      */
     public Dimension getSize () {
-        return myContainer.getSize();
+        return myContainer.getCanvasSize();
+    }
+    
+    public Point getOrigin() {
+        return myContainer.getOrigin();
     }
 
     /**

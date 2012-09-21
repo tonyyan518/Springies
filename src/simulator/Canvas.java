@@ -34,6 +34,11 @@ public class Canvas extends JComponent {
      * animate 25 times per second if possible (in milliseconds).
      */
     public static final int FRAMES_PER_SECOND = 25;
+    
+    private final int UNIT_CHANGE_IN_PIXELS = 10;
+    private final int ORIGINAL_WIDTH = 800;
+    private final int ORIGINAL_HEIGHT = 800;
+    private final int MINIMUM_WIDTH = 400;
     private static final JFileChooser CHOOSER = new JFileChooser(System
             .getProperties().getProperty("user.dir"));
     // user's game to be animated
@@ -42,16 +47,23 @@ public class Canvas extends JComponent {
     private Timer myTimer;
     // input state
     private int myLastKeyPressed;
-    private Point myLastMousePosition;
     // only one so that it maintains user's preferences
+    private Point myLastMousePosition;
+    //the size of canvas that is to be changed by UP and DOWN keys
+    private Dimension mySize;
+    //the x, y value of the top-left origin point
+    private Point originPoint;
+    
 
     /**
      * Initializes the canvas.
      * @param size of the canvas
      */
     public Canvas (Dimension size) {
+        originPoint = new Point(0, 0);
+        mySize = size;
         // request component size
-        setPreferredSize(size);
+        setPreferredSize(mySize);
         // set component to receive user input
         setInputListeners();
         setFocusable(true);
@@ -117,8 +129,12 @@ public class Canvas extends JComponent {
      */
     @Override
     public void paintComponent (Graphics pen) {
-        pen.setColor(Color.WHITE);
-        pen.fillRect(0, 0, getSize().width, getSize().height);
+        pen.setColor(Color.PINK);
+        int paintX = Math.max(originPoint.x, 0);
+        int paintY = Math.max(originPoint.y, 0);
+        int paintWidth = Math.min(mySize.width, ORIGINAL_WIDTH);
+        int paintHeight = Math.min(mySize.height, ORIGINAL_HEIGHT);
+        pen.fillRect(paintX, paintY, paintWidth, paintHeight);
         myTarget.paint((Graphics2D) pen);
     }
 
@@ -182,9 +198,47 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_C:
             case KeyEvent.VK_G:
             case KeyEvent.VK_1:
+            case KeyEvent.VK_UP: 
+                //increase in size 
+                changeSize(UNIT_CHANGE_IN_PIXELS);
+                break;
+            case KeyEvent.VK_DOWN:
+                //decrease in size
+                changeSize(-UNIT_CHANGE_IN_PIXELS);
+                break;
             default:
                 // good style
                 break;
         }
+    }
+    
+    /**
+     * To make the size of the walled area increase by numberOfPixels on each side.
+     * @param numberOfPixels
+     */
+    private void changeSize(int numberOfPixels) {
+        if (mySize.width + 2*numberOfPixels <= MINIMUM_WIDTH) {
+            System.out.println("The canvas size reaches minimum.");
+            return;
+        }
+        mySize.setSize(mySize.width + 2*numberOfPixels, mySize.height + 2*numberOfPixels);
+        if (mySize.width >= ORIGINAL_WIDTH)
+            mySize.setSize(ORIGINAL_WIDTH, mySize.height);
+        if (mySize.height >= ORIGINAL_HEIGHT)
+            mySize.setSize(mySize.width, ORIGINAL_HEIGHT);
+        changeOrigin(numberOfPixels);
+    }
+    
+    private void changeOrigin(int numberOfPixels) {
+        originPoint.x -= numberOfPixels;
+        originPoint.y -= numberOfPixels;
+    }
+    
+    public Point getOrigin() {
+        return originPoint;
+    }
+    
+    public Dimension getCanvasSize() {
+        return mySize;
     }
 }
