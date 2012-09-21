@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import environment.Gravity;
+import environment.Viscosity;
 import physicalObject.Bar;
 import physicalObject.FixedMass;
 import physicalObject.Mass;
@@ -18,6 +19,7 @@ public class Factory {
     private static final String SPRING = "spring";
     private static final String MUSCLE = "muscle";
     private static final String GRAVITY = "gravity";
+    private static final String VISCOSITY = "viscosity";
     /**
      * @param sim the simulation
      * @param modelFile the file
@@ -39,6 +41,9 @@ public class Factory {
                     else if (type.equals(GRAVITY)) {
                         sim.add(gravityCommand(line));
                     }
+                    else if (type.equals(VISCOSITY)) {
+                        sim.add(viscosityCommand(line));
+                    }
                 }
             }
             input.close();
@@ -47,17 +52,6 @@ public class Factory {
             // should not happen because File came from user selection
             e.printStackTrace();
         }
-    }
-
-    private Mass massCommand (Scanner line) {
-        int id = line.nextInt();
-        double x = line.nextDouble();
-        double y = line.nextDouble();
-        double mass = line.nextDouble();
-        if (mass < 0) {
-            return new FixedMass(id, x, y, mass);
-        }
-        return new Mass(id, x, y, mass);
     }
 
     private Spring springCommand (Scanner line, Simulation sim, String type) {
@@ -79,5 +73,10 @@ public class Factory {
         double direction = line.nextDouble();
         double magnitude = line.nextDouble();
         return new Gravity(direction, magnitude);
+    }
+    
+    private Viscosity viscosityCommand (Scanner line) {
+        double resistance = line.nextDouble();
+        return new Viscosity(resistance);
     }
 }

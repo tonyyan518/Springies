@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import environment.GlobalForce;
+import environment.Gravity;
+import environment.Viscosity;
 import physicalObject.Mass;
 import physicalObject.PhysicalObject;
 
@@ -91,5 +93,19 @@ public class Simulation {
             }
         }
         return null;
+    }
+    
+    public void toggleGravity() {
+        for (GlobalForce f : myGlobalForces) {
+            if (f instanceof Gravity)
+                f.toggleActivity();
+        }
+    }
+    
+    public void toggleViscosity() {
+        for (GlobalForce f : myGlobalForces) {
+            if (f instanceof Viscosity)
+                f.toggleActivity();
+        }
     }
 }
