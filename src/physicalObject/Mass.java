@@ -56,7 +56,7 @@ public class Mass extends PhysicalObject {
      */
     public void update (Simulation canvas, double dt) {
         myPrevPos = (Point2D)(myCenter.clone());
-        applyForce(getGravity());
+        //applyForce(getGravity());
         applyForce(getBounce(canvas.getSize()));
         // convert force back into Mover's velocity
         getVelocity().sum(myAcceleration);

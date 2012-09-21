@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import environment.GlobalForce;
 import physicalObject.Mass;
 import physicalObject.PhysicalObject;
 
@@ -14,6 +15,7 @@ import physicalObject.PhysicalObject;
  */
 public class Simulation {
     private List<PhysicalObject> myObjects;
+    private List<GlobalForce> myGlobalForces;
     private Canvas myContainer;
 
     /**
@@ -22,6 +24,7 @@ public class Simulation {
      */
     public Simulation (Canvas container) {
         myObjects = new ArrayList<PhysicalObject>();
+        myGlobalForces = new ArrayList<GlobalForce>();
         myContainer = container;
     }
     /**
@@ -29,6 +32,10 @@ public class Simulation {
      */
     public void add (PhysicalObject obj) {
         myObjects.add(obj);
+    }
+    
+    public void add (GlobalForce f) {
+        myGlobalForces.add(f);
     }
 
     /**
@@ -48,6 +55,10 @@ public class Simulation {
      * @param dt change in time
      */
     public void update (double dt) {
+        for (GlobalForce gf : myGlobalForces) {
+            gf.applyToObject(myObjects);
+        }
+        
         for (PhysicalObject obj : myObjects) {
             obj.update(this, dt);
         }
