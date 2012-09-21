@@ -2,6 +2,7 @@ package simulator;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import environment.CenterMass;
@@ -115,5 +116,18 @@ public class Simulation {
             if (f instanceof CenterMass)
                 f.toggleActivity();
         }
+    }
+    
+    public Mass highlight(Point mousePosition) {
+        for (PhysicalObject o: myObjects) {
+            if (o instanceof Mass) {
+                Mass m = (Mass)o;
+                Rectangle myRect = new Rectangle(m.getLeft(), m.getTop(), m.getSize().width, m.getSize().height);
+                if (myRect.contains(mousePosition)) {
+                    return m;
+                }
+            }
+        }
+        return null;
     }
 }

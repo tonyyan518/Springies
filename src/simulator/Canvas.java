@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import physicalObject.Mass;
 
 
 /**
@@ -60,6 +62,8 @@ public class Canvas extends JComponent {
     private static Point originPoint;
     // whether the global forces file is added
     private boolean globalForcesApplied;
+    // the mass that's controlled by the mouse
+    private Mass myControlledMass;
 
     /**
      * Initializes the canvas.
@@ -67,6 +71,7 @@ public class Canvas extends JComponent {
      * @param size of the canvas
      */
     public Canvas (Dimension size) {
+        myControlledMass = null;
         globalForcesApplied = false;
         originPoint = new Point(0, 0);
         mySize = size;
@@ -166,13 +171,42 @@ public class Canvas extends JComponent {
                 myLastKeyPressed = NO_KEY_PRESSED;
             }
         });
+        
         myLastMousePosition = new Point();
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
             }
+            @Override
+            public void mouseDragged (MouseEvent e) {
+                
+            }
         });
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed (MouseEvent e) {
+                highlight(myLastMousePosition);
+            }
+            
+            @Override
+            public void mouseReleased (MouseEvent e) {
+                if (myControlledMass != null) {
+                    myControlledMass.changeToDefaultColor();
+                    myControlledMass = null;
+                }
+            }
+        });
+    }
+    
+    private void highlight(Point mousePosition) {
+        for (Simulation s: myTargets) {
+            myControlledMass = s.highlight(mousePosition);
+        }
+        if (myControlledMass != null) {
+            myControlledMass.highlight();
+        }
     }
 
     private void loadModel () {

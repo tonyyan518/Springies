@@ -20,6 +20,8 @@ public class Mass extends PhysicalObject {
     private static final int DOWN = 270;
     private static final int BOUNCE_SCALE = 2;
     private static final int MASS_DIM = 16;
+    private static final Color HIGHLIGHT_COLOR=Color.CYAN;
+    private static final Color DEFAULT_COLOR=Color.BLACK;
     private Point2D myCenter;
     private Vector myVelocity;
     private Dimension mySize;
@@ -27,6 +29,7 @@ public class Mass extends PhysicalObject {
     private double myMass;
     private Vector myAcceleration;
     private Point2D myPrevPos;
+    private Color myColor;
 
     /**
      * @param id Mass's id
@@ -35,6 +38,7 @@ public class Mass extends PhysicalObject {
      * @param mass Mass's mass
      */
     public Mass (int id, double x, double y, double mass) {
+        myColor = Color.black;
         myAcceleration = new Vector();
         myMass = mass;
         myID = id;
@@ -58,7 +62,7 @@ public class Mass extends PhysicalObject {
      * @param pen the pen
      */
     public void paint (Graphics2D pen) {
-        pen.setColor(Color.BLACK);
+        pen.setColor(myColor);
         pen.fillOval(getLeft(), getTop(), getSize().width, getSize().height);
     }
 
@@ -230,5 +234,13 @@ public class Mass extends PhysicalObject {
      */
     public boolean isMoving() {
         return !myCenter.equals(myPrevPos);
+    }
+    
+    public void highlight() {
+        myColor = HIGHLIGHT_COLOR;
+    }
+    
+    public void changeToDefaultColor() {
+        myColor = DEFAULT_COLOR;
     }
 }
