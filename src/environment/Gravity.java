@@ -15,11 +15,6 @@ public class Gravity extends GlobalForce {
     
     @Override
     public Vector getForce (Mass m) {
-        Vector f = new Vector();
-        if (getActivity()) {
-            f.setDirection(myDirection);
-            f.setMagnitude(myMagnitude);
-        }
-        return f;
+        return new Vector(myDirection, myMagnitude);
     }
 }

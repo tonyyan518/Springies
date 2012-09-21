@@ -19,7 +19,6 @@ public class Mass extends PhysicalObject {
     private static final int UP = 90;
     private static final int DOWN = 270;
     private static final int BOUNCE_SCALE = 2;
-    private static final double GRAVITY = 0.5;
     private static final int MASS_DIM = 16;
     private Point2D myCenter;
     private Vector myVelocity;
@@ -92,12 +91,6 @@ public class Mass extends PhysicalObject {
      */
     public boolean match (int id) {
         return myID == id;
-    }
-
-    // add gravity towards bottom
-    private Vector getGravity () {
-        Vector result = new Vector(UP, GRAVITY);
-        return result;
     }
 
     // check for move out of bounds
