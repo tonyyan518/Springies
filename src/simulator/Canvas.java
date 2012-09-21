@@ -180,7 +180,11 @@ public class Canvas extends JComponent {
             }
             @Override
             public void mouseDragged (MouseEvent e) {
-                
+                if (myControlledMass != null) {
+                    Point targetPosition = new Point(e.getPoint());
+                    //regulatePointWithinFrame(targetPosition);
+                    myControlledMass.setCenter(targetPosition);
+                }
             }
         });
         
@@ -198,6 +202,13 @@ public class Canvas extends JComponent {
                 }
             }
         });
+    }
+    
+    private void regulatePointWithinFrame (Point myTarget) {
+        myTarget.x = Math.max(myTarget.x, originPoint.x);
+        myTarget.x = Math.min(myTarget.x, originPoint.x + mySize.width);
+        myTarget.x = Math.max(myTarget.y, originPoint.y);
+        myTarget.x = Math.min(myTarget.y, originPoint.y + mySize.height);
     }
     
     private void highlight(Point mousePosition) {
