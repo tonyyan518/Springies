@@ -9,6 +9,7 @@ import environment.CenterMass;
 import environment.GlobalForce;
 import environment.Gravity;
 import environment.Viscosity;
+import environment.WallRepulsion;
 import physicalObject.Mass;
 import physicalObject.PhysicalObject;
 
@@ -115,6 +116,15 @@ public class Simulation {
         for (GlobalForce f : myGlobalForces) {
             if (f instanceof CenterMass)
                 f.toggleActivity();
+        }
+    }
+    
+    public void toggleWall(int id) {
+        for (GlobalForce f : myGlobalForces) {
+            if (f instanceof WallRepulsion) {
+                if (((WallRepulsion)f).getID() == id)
+                    f.toggleActivity();
+            }
         }
     }
     

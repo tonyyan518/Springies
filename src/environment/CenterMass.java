@@ -21,9 +21,9 @@ public class CenterMass extends GlobalForce{
     public Vector getForce (Mass m) {
         double dx = myCenter.getX() - m.getCenter().getX();
         double dy =  myCenter.getY() -  m.getCenter().getY();
-        double dis = Math.sqrt(dx * dx + dy * dy);
+        double dist = Math.sqrt(dx * dx + dy * dy);
         double dir = Math.toDegrees(Math.atan2(dy, dx));
-        double mag = Math.abs(myMagnitude) / Math.pow(dis, myExponent);
+        double mag = Math.abs(myMagnitude) / Math.pow(dist, myExponent);
         Vector f = new Vector (dir, mag);
         if (myMagnitude < 0)
             f.negate();

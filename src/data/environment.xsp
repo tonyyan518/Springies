@@ -1,6 +1,2 @@
-<<<<<<< HEAD
-gravity 0.0 0.5
-=======
-centermass 200 200 10.0 0.0
-viscosity 1.0
->>>>>>> origin/master
+wall 4 150.0 1.0
+wall 2 150.0 1.0

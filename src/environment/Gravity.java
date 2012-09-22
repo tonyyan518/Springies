@@ -8,7 +8,6 @@ public class Gravity extends GlobalForce {
     private double myMagnitude;
        
     public Gravity (double dir, double mag) {
-        super();
         myDirection = dir;
         myMagnitude = mag;
     }

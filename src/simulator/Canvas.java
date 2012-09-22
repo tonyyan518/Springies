@@ -264,10 +264,27 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_G:
                 for (Simulation s : myTargets)
                     s.toggleGravity();
+                break;
             case KeyEvent.VK_V:
                 for (Simulation s : myTargets)
-                    s.toggleViscosity();            
+                    s.toggleViscosity();   
+                break;
             case KeyEvent.VK_1:
+                for (Simulation s : myTargets)
+                    s.toggleWall(1);   
+                break;
+            case KeyEvent.VK_2:
+                for (Simulation s : myTargets)
+                    s.toggleWall(2);   
+                break;
+            case KeyEvent.VK_3:
+                for (Simulation s : myTargets)
+                    s.toggleWall(3);   
+                break;
+            case KeyEvent.VK_4:
+                for (Simulation s : myTargets)
+                    s.toggleWall(4);   
+                break;
             case KeyEvent.VK_UP:
                 // increase the walled area in size
                 changeSize(UNIT_CHANGE_IN_PIXELS);

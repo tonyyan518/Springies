@@ -1,12 +1,19 @@
 package environment;
 
+import java.awt.Dimension;
+import java.awt.geom.Point2D;
 import physicalObject.Mass;
+import simulator.Canvas;
 import simulator.Vector;
 
 public class WallRepulsion extends GlobalForce {
-    int myID;
-    double myMagnitude;
-    double myExponent;
+    private static final int LEFT = 180;
+    private static final int RIGHT = 0;
+    private static final int UP = 90;
+    private static final int DOWN = 270;
+    private int myID;
+    private double myMagnitude;
+    private double myExponent;
     
     public WallRepulsion (int id, double mag, double exp) {
         myID = id;
@@ -16,35 +23,32 @@ public class WallRepulsion extends GlobalForce {
     
     @Override
     public Vector getForce (Mass m) {
+        Dimension canvasDimension = Canvas.getCanvasSize();
+        Point2D canvasOrigin = Canvas.getOrigin();
+        double dir = 0;
+        double dist = 0;
         if (myID == 1) {
-            return topWall();
+            dir = UP;
+            dist = m.getCenter().getY() - canvasOrigin.getY();
         }
         else if (myID == 2) {
-            return rightWall();
+            dir = LEFT;
+            dist = canvasOrigin.getX() + canvasDimension.width - m.getCenter().getX();
         }
         else if (myID == 3) {
-            return bottomWall();
+            dir = DOWN;
+            dist = canvasOrigin.getY() + canvasDimension.height - m.getCenter().getY();
         }
         else if (myID == 4) {
-            return leftWall();
+            dir = RIGHT;
+            dist = m.getCenter().getX() - canvasOrigin.getX();
         }
-        else
-            return new Vector();
+        double mag = myMagnitude / Math.pow(dist, myExponent);
+        System.out.println(mag);
+        return new Vector(dir, mag);
     }
     
-    private Vector leftWall() {
-        return new Vector();
-    }
-    
-    private Vector rightWall() {
-        return new Vector();
-    }
-    
-    private Vector topWall() {
-        return new Vector();
-    }
-    
-    private Vector bottomWall() {
-        return new Vector();
+    public int getID() {
+        return myID;
     }
 }

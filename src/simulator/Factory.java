@@ -5,6 +5,7 @@ import java.util.Scanner;
 import environment.CenterMass;
 import environment.Gravity;
 import environment.Viscosity;
+import environment.WallRepulsion;
 import physicalObject.Bar;
 import physicalObject.Mass;
 import physicalObject.Muscle;
@@ -21,6 +22,7 @@ public class Factory {
     private static final String GRAVITY = "gravity";
     private static final String VISCOSITY = "viscosity";
     private static final String CENTER_OF_MASS  = "centermass";
+    private static final String WALL = "wall";
     /**
      * @param sim the simulation
      * @param modelFile the file
@@ -48,7 +50,9 @@ public class Factory {
                     else if (type.equals(CENTER_OF_MASS)) {
                         sim.add(centerMassCommand(line));
                     }
-
+                    else if (type.equals(WALL)) {
+                        sim.add(wallCommand(line));
+                    }
                 }
             }
             input.close();
@@ -91,5 +95,12 @@ public class Factory {
         double mag = line.nextDouble();
         double exp = line.nextDouble();
         return new CenterMass(x, y, mag, exp);
+    }
+    
+    private WallRepulsion wallCommand (Scanner line) {
+        int id = line.nextInt();
+        double mag = line.nextDouble();
+        double exp = line.nextDouble();
+        return new WallRepulsion(id, mag, exp);
     }
 }
