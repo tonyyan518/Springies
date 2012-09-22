@@ -159,6 +159,10 @@ public class Mass extends PhysicalObject {
         myCenter = new Point2D.Double(x, y);
     }
 
+    public void setCenter (Point p) {
+        myCenter = new Point2D.Double(p.x, p.y);
+    }
+    
     /**
      * Returns shape's left-most coordinate.
      */
