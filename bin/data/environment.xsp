@@ -1,2 +1,2 @@
-gravity 90.0 1.5
+centermass 200 200 10.0 0.0
 viscosity 1.0

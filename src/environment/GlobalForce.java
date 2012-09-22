@@ -15,7 +15,7 @@ public abstract class GlobalForce {
     
     public void applyToObject(List<PhysicalObject> allObjects) {
         for (PhysicalObject obj : allObjects) {
-            if (obj instanceof Mass) {
+            if (myIsActive && obj instanceof Mass) {
                 ((Mass) obj).applyForce(getForce((Mass)obj));
             }
         }

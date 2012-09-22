@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import environment.CenterMass;
 import environment.GlobalForce;
 import environment.Gravity;
 import environment.Viscosity;
@@ -105,6 +106,13 @@ public class Simulation {
     public void toggleViscosity() {
         for (GlobalForce f : myGlobalForces) {
             if (f instanceof Viscosity)
+                f.toggleActivity();
+        }
+    }
+    
+    public void toggleCenterMass() {
+        for (GlobalForce f : myGlobalForces) {
+            if (f instanceof CenterMass)
                 f.toggleActivity();
         }
     }

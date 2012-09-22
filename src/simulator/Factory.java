@@ -2,10 +2,10 @@ package simulator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import environment.CenterMass;
 import environment.Gravity;
 import environment.Viscosity;
 import physicalObject.Bar;
-import physicalObject.FixedMass;
 import physicalObject.Mass;
 import physicalObject.Muscle;
 import physicalObject.Spring;
@@ -20,6 +20,7 @@ public class Factory {
     private static final String MUSCLE = "muscle";
     private static final String GRAVITY = "gravity";
     private static final String VISCOSITY = "viscosity";
+    private static final String CENTER_OF_MASS  = "centermass";
     /**
      * @param sim the simulation
      * @param modelFile the file
@@ -44,6 +45,10 @@ public class Factory {
                     else if (type.equals(VISCOSITY)) {
                         sim.add(viscosityCommand(line));
                     }
+                    else if (type.equals(CENTER_OF_MASS)) {
+                        sim.add(centerMassCommand(line));
+                    }
+
                 }
             }
             input.close();
@@ -78,5 +83,13 @@ public class Factory {
     private Viscosity viscosityCommand (Scanner line) {
         double resistance = line.nextDouble();
         return new Viscosity(resistance);
+    }
+    
+    private CenterMass centerMassCommand (Scanner line) {
+        int x = line.nextInt();
+        int y = line.nextInt();
+        double mag = line.nextDouble();
+        double exp = line.nextDouble();
+        return new CenterMass(x, y, mag, exp);
     }
 }
