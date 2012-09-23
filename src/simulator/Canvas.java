@@ -18,6 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import physicalObject.Mass;
+import physicalObject.Spring;
 
 
 /**
@@ -64,6 +65,7 @@ public class Canvas extends JComponent {
     private boolean globalForcesApplied;
     // the mass that's controlled by the mouse
     private Mass myControlledMass;
+    private Simulation userControlledSimulation;
 
     /**
      * Initializes the canvas.
@@ -71,6 +73,7 @@ public class Canvas extends JComponent {
      * @param size of the canvas
      */
     public Canvas (Dimension size) {
+        userControlledSimulation = null;
         myControlledMass = null;
         globalForcesApplied = false;
         originPoint = new Point(0, 0);
@@ -171,48 +174,74 @@ public class Canvas extends JComponent {
                 myLastKeyPressed = NO_KEY_PRESSED;
             }
         });
-        
+
         myLastMousePosition = new Point();
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
             }
+
             @Override
             public void mouseDragged (MouseEvent e) {
+                Point targetPosition = new Point(e.getPoint());
                 if (myControlledMass != null) {
-                    Point targetPosition = new Point(e.getPoint());
-                    //regulatePointWithinFrame(targetPosition);
                     myControlledMass.setCenter(targetPosition);
+                }
+                if (userControlledSimulation != null) {
+                    userControlledSimulation.moveUserPoint(targetPosition);
                 }
             }
         });
-        
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed (MouseEvent e) {
+                if (outOfBound(e.getPoint())) {
+                    return;
+                }
                 highlight(myLastMousePosition);
+                if (myControlledMass == null) {
+                    findMinimumDistance(e.getPoint());
+                    if (userControlledSimulation != null) {
+                        userControlledSimulation.createUserObjects(e.getPoint());
+                    }
+                }
             }
             
+            private boolean outOfBound (Point mousePoint) {
+                return ((mousePoint.x < originPoint.x) || (mousePoint.x > originPoint.x + mySize.width)
+                        || (mousePoint.y < originPoint.y) || (mousePoint.y > originPoint.y + mySize.height));
+            }
+
+            private void findMinimumDistance (Point mousePoint) {
+                double minimumDistance = Double.MAX_VALUE;
+                userControlledSimulation = null;
+                for (Simulation s : myTargets) {
+                    double distance = s.calculateMinimumDistance(mousePoint);
+                    if (distance < minimumDistance) {
+                        minimumDistance = distance;
+                        userControlledSimulation = s;
+                    }
+                }
+            }
+
             @Override
             public void mouseReleased (MouseEvent e) {
                 if (myControlledMass != null) {
                     myControlledMass.changeToDefaultColor();
                     myControlledMass = null;
                 }
+                if (userControlledSimulation != null) {
+                    userControlledSimulation.deleteUserObjects(e.getPoint());
+                    userControlledSimulation = null;
+                }
             }
         });
     }
-    
-    private void regulatePointWithinFrame (Point myTarget) {
-        myTarget.x = Math.max(myTarget.x, originPoint.x);
-        myTarget.x = Math.min(myTarget.x, originPoint.x + mySize.width);
-        myTarget.x = Math.max(myTarget.y, originPoint.y);
-        myTarget.x = Math.min(myTarget.y, originPoint.y + mySize.height);
-    }
-    
-    private void highlight(Point mousePosition) {
-        for (Simulation s: myTargets) {
+
+    private void highlight (Point mousePosition) {
+        for (Simulation s : myTargets) {
             myControlledMass = s.highlight(mousePosition);
         }
         if (myControlledMass != null) {
@@ -278,23 +307,23 @@ public class Canvas extends JComponent {
                 break;
             case KeyEvent.VK_V:
                 for (Simulation s : myTargets)
-                    s.toggleViscosity();   
+                    s.toggleViscosity();
                 break;
             case KeyEvent.VK_1:
                 for (Simulation s : myTargets)
-                    s.toggleWall(1);   
+                    s.toggleWall(1);
                 break;
             case KeyEvent.VK_2:
                 for (Simulation s : myTargets)
-                    s.toggleWall(2);   
+                    s.toggleWall(2);
                 break;
             case KeyEvent.VK_3:
                 for (Simulation s : myTargets)
-                    s.toggleWall(3);   
+                    s.toggleWall(3);
                 break;
             case KeyEvent.VK_4:
                 for (Simulation s : myTargets)
-                    s.toggleWall(4);   
+                    s.toggleWall(4);
                 break;
             case KeyEvent.VK_UP:
                 // increase the walled area in size
@@ -332,7 +361,6 @@ public class Canvas extends JComponent {
         originPoint.x -= numberOfPixels;
         originPoint.y -= numberOfPixels;
     }
-    
 
     public static Point getOrigin () {
         return originPoint;

@@ -22,6 +22,7 @@ public class Mass extends PhysicalObject {
     private static final int MASS_DIM = 16;
     private static final Color HIGHLIGHT_COLOR=Color.CYAN;
     private static final Color DEFAULT_COLOR=Color.BLACK;
+    private static final Color HIDDEN_COLOR=Color.PINK;
     private Point2D myCenter;
     private Vector myVelocity;
     private Dimension mySize;
@@ -246,5 +247,9 @@ public class Mass extends PhysicalObject {
     
     public void changeToDefaultColor() {
         myColor = DEFAULT_COLOR;
+    }
+    
+    public void hide() {
+        myColor = HIDDEN_COLOR; 
     }
 }
