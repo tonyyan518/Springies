@@ -9,7 +9,7 @@ import simulator.Canvas;
  */
 public final class Main {
     // constants
-    private static final Dimension SIZE = new Dimension(800, 800);
+    private static final Dimension SIZE = new Dimension(600, 600);
     private static final String TITLE = "Springies!";
 
     private Main () {
