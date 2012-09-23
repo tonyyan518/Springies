@@ -1,9 +1,10 @@
-package physicalobject;
+package physicalObject;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import simulator.Simulation;
 import simulator.Vector;
+
 
 /**
  * @author Robert C. Duvall

@@ -94,7 +94,6 @@ public class Vector {
 
     /**
      * Sets this force's magnitude to the given value.
-     * @param value the new magnitude
      */
     public void setMagnitude (double value) {
         myMagnitude = value;
@@ -138,7 +137,6 @@ public class Vector {
 
     /**
      * Sets this force's direction to the given value.
-     * @param value the new magnitude
      */
     public void setDirection (double value) {
         myAngle = value;
@@ -191,8 +189,8 @@ public class Vector {
     }
 
     /**
-     * change the force to a force of the same magnitude,
-     * but in the opposite direction as the original force.
+     * change the force to a force of the same magnitude, but in the opposite direction as
+     * the original force.
      */
     public void negate () {
         turn(HALF_DEGREE);
