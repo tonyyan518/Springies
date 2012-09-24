@@ -12,7 +12,12 @@ import simulator.Vector;
 public class WallRepulsion extends GlobalForce {
     private static final int LEFT = 180;
     private static final int RIGHT = 0;
-    
+    private static final int UP = 90;
+    private static final int DOWN = 270;
+    private static final int TOP_WALL = 1;
+    private static final int RIGHT_WALL = 2;
+    private static final int LEFT_WALL = 4;
+    private static final int BOTTOM_WALL = 3;
     private int myID;
     private double myMagnitude;
     private double myExponent;

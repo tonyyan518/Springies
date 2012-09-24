@@ -83,12 +83,10 @@ public class Factory {
         double magnitude = line.nextDouble();
         return new Gravity(direction, magnitude);
     }
-    
     private Viscosity viscosityCommand (Scanner line) {
         double resistance = line.nextDouble();
         return new Viscosity(resistance);
     }
-    
     private CenterMass centerMassCommand (Scanner line) {
         int x = line.nextInt();
         int y = line.nextInt();
@@ -96,7 +94,6 @@ public class Factory {
         double exp = line.nextDouble();
         return new CenterMass(x, y, mag, exp);
     }
-    
     private WallRepulsion wallCommand (Scanner line) {
         int id = line.nextInt();
         double mag = line.nextDouble();
