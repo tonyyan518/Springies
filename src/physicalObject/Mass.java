@@ -109,8 +109,7 @@ public class Mass extends PhysicalObject {
         //this mass reaches the right wall
         else if (getRight() > origin.x + bounds.width) {
             impulse = new Vector(LEFT, BOUNCE_SCALE);
-            setCenter(origin.x + bounds.width - getSize().width
-                    / 2, getCenter().getY());
+            setCenter(origin.x + bounds.width - getSize().width / 2, getCenter().getY());
         }
         //this mass reaches the top wall
         if (getTop() < origin.y) {
@@ -120,8 +119,7 @@ public class Mass extends PhysicalObject {
         //this mass reaches the bottom wall
         else if (getBottom() > origin.y + bounds.height) {
             impulse = new Vector(DOWN, BOUNCE_SCALE);
-            setCenter(getCenter().getX(), origin.y
-                    + bounds.height - getSize().height / 2);
+            setCenter(getCenter().getX(), origin.y + bounds.height - getSize().height / 2);
         }
         impulse.scale(getVelocity().getRelativeMagnitude(impulse));
         return impulse;

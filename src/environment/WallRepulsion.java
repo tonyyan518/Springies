@@ -48,13 +48,11 @@ public class WallRepulsion extends GlobalForce {
         }
         else if (myID == RIGHT_WALL) {
             dir = LEFT;
-            dist = canvasOrigin.getX()
-                    + canvasDimension.width - m.getCenter().getX();
+            dist = canvasOrigin.getX() + canvasDimension.width - m.getCenter().getX();
         }
         else if (myID == BOTTOM_WALL) {
             dir = DOWN;
-            dist = canvasOrigin.getY()
-                    + canvasDimension.height - m.getCenter().getY();
+            dist = canvasOrigin.getY() + canvasDimension.height - m.getCenter().getY();
         }
         else if (myID == LEFT_WALL) {
             dir = RIGHT;

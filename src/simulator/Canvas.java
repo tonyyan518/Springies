@@ -207,12 +207,12 @@ public class Canvas extends JComponent {
     }
 
     private void loadModel () {
-        final Factory factory = new Factory();
+        final Factory FACTORY = new Factory();
         int response = CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
             // initialize a new simulation
             myTargets.add(new Simulation(this));
-            factory.loadModel(myTargets.get(myTargets.size() - 1),
+            FACTORY.loadModel(myTargets.get(myTargets.size() - 1),
                     CHOOSER.getSelectedFile());
         }
 
@@ -220,7 +220,7 @@ public class Canvas extends JComponent {
             int optionalResponse = CHOOSER.showOpenDialog(null);
             if (optionalResponse == JFileChooser.APPROVE_OPTION) {
                 myGlobalForcesApplied = true;
-                factory.loadModel(myTargets.get(myTargets.size() - 1),
+                FACTORY.loadModel(myTargets.get(myTargets.size() - 1),
                         CHOOSER.getSelectedFile());
             }
         }
@@ -255,8 +255,7 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_C:
                 // clear all models
                 int myOption = JOptionPane.showConfirmDialog(this,
-                        "You seriously want to destroy "
-                        + "all the lovely springies?");
+                        "You seriously want to destroy all the lovely springies?");
                 if (myOption == 0) {
                     clearModel();
                 }
@@ -320,8 +319,7 @@ public class Canvas extends JComponent {
             System.out.println("The canvas size reaches minimum.");
             return;
         }
-        ourSize.setSize(ourSize.width + 2 * numberOfPixels, ourSize.height + 2
-                * numberOfPixels);
+        ourSize.setSize(ourSize.width + 2 * numberOfPixels, ourSize.height + 2 * numberOfPixels);
         changeOrigin(numberOfPixels);
         System.out.println(ourOriginPoint);
         System.out.println(ourSize);

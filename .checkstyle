@@ -4,7 +4,7 @@
   <local-check-config name="CompSci308" location="E:\CS\EclipseWorkspace\fall12_compsci308_02_Springs\xml\CompSci308_checkstyle.xml" type="external" description="">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
-  <fileset name="all" enabled="true" check-config-name="format-cs" local="false">
+  <fileset name="all" enabled="true" check-config-name="cps308 2" local="false">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
 </fileset-config>

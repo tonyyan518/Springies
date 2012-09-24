@@ -69,8 +69,7 @@ public class Spring extends PhysicalObject {
      */
     public void update (Simulation canvas, double dt) {
         // apply hooke's law to each attached mass
-        Vector f = new Vector(Vector.angleBetween(myDx, myDy), myK
-                * (myLength - calcCurrentLen()));
+        Vector f = new Vector(Vector.angleBetween(myDx, myDy), myK * (myLength - calcCurrentLen()));
 
         myStart.applyForce(f);
         f.negate();
