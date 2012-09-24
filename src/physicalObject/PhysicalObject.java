@@ -1,4 +1,4 @@
-package physicalObject;
+package physicalobject;
 import java.awt.Graphics2D;
 import simulator.Simulation;
 

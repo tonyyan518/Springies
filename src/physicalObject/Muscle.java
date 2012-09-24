@@ -1,4 +1,4 @@
-package physicalObject;
+package physicalobject;
 import simulator.Simulation;
 
 /**

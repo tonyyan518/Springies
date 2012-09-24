@@ -17,7 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-import physicalObject.Mass;
+import physicalobject.Mass;
 
 
 /**
@@ -41,9 +41,9 @@ public class Canvas extends JComponent {
     public static final int FRAMES_PER_SECOND = 25;
 
     private static final int UNIT_CHANGE_IN_PIXELS = 10;
-    private static final int ORIGINAL_WIDTH = 800;
-    private static final int ORIGINAL_HEIGHT = 800;
-    private static final int MINIMUM_WIDTH = 400;
+    private static final int ORIGINAL_WIDTH = 600;
+    private static final int ORIGINAL_HEIGHT = 600;
+    private static final int MINIMUM_WIDTH = 300;
     private static final int TOP_WALL = 1;
     private static final int RIGHT_WALL = 2;
     private static final int LEFT_WALL = 4;
@@ -273,6 +273,11 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_V:
                 for (Simulation s : myTargets) {
                     s.toggleViscosity();
+                }
+                break;
+            case KeyEvent.VK_M:
+                for (Simulation s : myTargets) {
+                    s.toggleCenterMass();
                 }
                 break;
             case KeyEvent.VK_1:

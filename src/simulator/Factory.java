@@ -6,10 +6,10 @@ import environment.CenterMass;
 import environment.Gravity;
 import environment.Viscosity;
 import environment.WallRepulsion;
-import physicalObject.Bar;
-import physicalObject.Mass;
-import physicalObject.Muscle;
-import physicalObject.Spring;
+import physicalobject.Bar;
+import physicalobject.Mass;
+import physicalobject.Muscle;
+import physicalobject.Spring;
 
 /**
  * @author Robert C. Duvall

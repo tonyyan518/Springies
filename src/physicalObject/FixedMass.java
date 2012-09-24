@@ -1,4 +1,4 @@
-package physicalObject;
+package physicalobject;
 import simulator.Simulation;
 
 /**
@@ -14,6 +14,11 @@ public class FixedMass extends Mass {
     public FixedMass (int id, double x, double y, double mass) {
         super(id, x, y, mass);
     }
+    /**
+     * FixedMasses will never move, so they are never updated.
+     * @param canvas the canvas
+     * @param dt change in time
+     */
     @Override
     public void update (Simulation canvas, double dt) { }
 }

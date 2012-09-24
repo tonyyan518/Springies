@@ -10,8 +10,8 @@ import environment.GlobalForce;
 import environment.Gravity;
 import environment.Viscosity;
 import environment.WallRepulsion;
-import physicalObject.Mass;
-import physicalObject.PhysicalObject;
+import physicalobject.Mass;
+import physicalobject.PhysicalObject;
 
 
 /**
@@ -114,8 +114,10 @@ public class Simulation {
     
     public void toggleCenterMass() {
         for (GlobalForce f : myGlobalForces) {
-            if (f instanceof CenterMass)
+            if (f instanceof CenterMass) {
                 f.toggleActivity();
+                System.out.println("Center of Mass turned on/off");
+            }
         }
     }
     
