@@ -1,8 +1,8 @@
 package environment;
-import simulator.Vector;
 import java.util.List;
 import physicalobject.Mass;
 import physicalobject.PhysicalObject;
+import simulator.Vector;
 
 /**
  * @author tyy

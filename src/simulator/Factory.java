@@ -1,11 +1,11 @@
 package simulator;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import environment.CenterMass;
 import environment.Gravity;
 import environment.Viscosity;
 import environment.WallRepulsion;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import physicalobject.Bar;
 import physicalobject.Mass;
 import physicalobject.Muscle;
@@ -70,7 +70,8 @@ public class Factory {
         double ks = line.nextDouble();
         if (type.equals(MUSCLE)) {
             double amp = line.nextDouble();
-            return new Muscle(sim.getMass(m1), sim.getMass(m2), restLength, ks, amp);
+            return new Muscle(sim.getMass(m1), sim.getMass(m2),
+                    restLength, ks, amp);
         }
         else if (ks < 0) {
             return new Bar(sim.getMass(m1), sim.getMass(m2), restLength, ks);

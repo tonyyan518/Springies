@@ -12,7 +12,6 @@ public class CenterMass extends GlobalForce {
     private double myMagnitude;
     private double myExponent;
     /**
-     * @param name the name of the force
      * @param x the x coordinate of the center of mass
      * @param y the y coordinate of the center of mass
      * @param mag the magnitude of the force

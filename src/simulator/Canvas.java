@@ -19,7 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import physicalobject.Mass;
 
-
 /**
  * Creates an component that is a viewer onto an animation.
  * @author Robert C. Duvall
@@ -44,10 +43,6 @@ public class Canvas extends JComponent {
     private static final int ORIGINAL_WIDTH = 600;
     private static final int ORIGINAL_HEIGHT = 600;
     private static final int MINIMUM_WIDTH = 300;
-    private static final int TOP_WALL = 1;
-    private static final int RIGHT_WALL = 2;
-    private static final int LEFT_WALL = 4;
-    private static final int BOTTOM_WALL = 3;
     private static final JFileChooser CHOOSER =
             new JFileChooser(System.getProperties().getProperty("user.dir"));
     // the size of canvas that is to be changed by UP and DOWN keys
@@ -144,7 +139,7 @@ public class Canvas extends JComponent {
      */
     @Override
     public void paintComponent (Graphics pen) {
-        pen.setColor(Color.PINK);
+        pen.setColor(Color.LIGHT_GRAY);
         int paintX = Math.max(ourOriginPoint.x, 0);
         int paintY = Math.max(ourOriginPoint.y, 0);
         int paintWidth = Math.min(ourSize.width, ORIGINAL_WIDTH);
@@ -260,7 +255,8 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_C:
                 // clear all models
                 int myOption = JOptionPane.showConfirmDialog(this,
-                        "You seriously want to destroy all the lovely springies?");
+                        "You seriously want to destroy "
+                        + "all the lovely springies?");
                 if (myOption == 0) {
                     clearModel();
                 }
