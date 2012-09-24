@@ -1,6 +1,7 @@
 package environment;
 
 import java.awt.geom.Point2D;
+import java.util.Scanner;
 import physicalobject.Mass;
 import simulator.Vector;
 
@@ -23,6 +24,20 @@ public class CenterMass extends GlobalForce {
         myMagnitude = mag;
         myExponent = exp;
     }
+
+    /**
+     * create a CenterMass instance 
+     * @param line input to be handled
+     * @return A CenterMass object that is a global force
+     */
+    public static CenterMass createCenterMass (Scanner line) {
+        int x = line.nextInt();
+        int y = line.nextInt();
+        double mag = line.nextDouble();
+        double exp = line.nextDouble();
+        return new CenterMass(x, y, mag, exp);
+    }
+
     /**
      * The center of mass applies a force on each mass depending
      * on its magnitude and how far away the mass is.

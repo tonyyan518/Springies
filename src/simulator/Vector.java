@@ -72,8 +72,8 @@ public class Vector {
      * @param other the other force
      */
     public double getRelativeMagnitude (Vector other) {
-        return -getMagnitude()
-                * Math.cos(Math.toRadians(getAngleBetween(other)));
+        return -getMagnitude() *
+                Math.cos(Math.toRadians(getAngleBetween(other)));
     }
 
     /**
@@ -103,12 +103,12 @@ public class Vector {
     public double getDirection () {
         // standardize between -360 and +360 (keep 360, -360, and 0 as distinct
         // values)
-        final double offset = 0.001;
+        final double OFFSET = 0.001;
         double sign = -1;
         if (myAngle < 0) {
             sign = 1;
         }
-        return ((myAngle + sign * offset) % FULL_DEGREE) - sign * offset;
+        return ((myAngle + sign * OFFSET) % FULL_DEGREE) - sign * OFFSET;
     }
     /**
      * Returns angle.
@@ -211,16 +211,24 @@ public class Vector {
      */
     @Override
     public boolean equals (Object force) {
-        final double epsilon = 0.000001;
+        final double EPSILON = 0.000001;
         try {
             Vector other = (Vector) force;
-            return Math.abs(getMagnitude() - other.getMagnitude())
-                    < epsilon && Math.abs(getDirection()
-                            - other.getDirection()) < epsilon;
+            return Math.abs(getMagnitude() - other.getMagnitude()) <
+                    EPSILON && Math.abs(getDirection() -
+                            other.getDirection()) < EPSILON;
         }
         catch (ClassCastException e) {
             return false;
         }
+    }
+
+    /**
+     * as required by checkstyle, to override hashCode when equals is overriden
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     /**

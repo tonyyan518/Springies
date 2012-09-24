@@ -20,14 +20,9 @@ public class Mass extends PhysicalObject {
     private static final int DOWN = 270;
     private static final int BOUNCE_SCALE = 2;
     private static final int MASS_DIM = 16;
-<<<<<<< HEAD
-    private static final Color HIGHLIGHT_COLOR=Color.CYAN;
-    private static final Color DEFAULT_COLOR=Color.BLACK;
-    private static final Color HIDDEN_COLOR=Color.PINK;
-=======
     private static final Color HIGHLIGHT_COLOR = Color.CYAN;
     private static final Color DEFAULT_COLOR = Color.BLACK;
->>>>>>> origin/master
+    private static final Color HIDDEN_COLOR = Color.PINK;
     private Point2D myCenter;
     private Vector myVelocity;
     private Dimension mySize;
@@ -115,8 +110,8 @@ public class Mass extends PhysicalObject {
         //this mass reaches the right wall
         else if (getRight() > origin.x + bounds.width) {
             impulse = new Vector(LEFT, BOUNCE_SCALE);
-            setCenter(origin.x + bounds.width - getSize().width
-                    / 2, getCenter().getY());
+            setCenter(origin.x + bounds.width - getSize().width / 2,
+                    getCenter().getY());
         }
         //this mass reaches the top wall
         if (getTop() < origin.y) {
@@ -126,8 +121,8 @@ public class Mass extends PhysicalObject {
         //this mass reaches the bottom wall
         else if (getBottom() > origin.y + bounds.height) {
             impulse = new Vector(DOWN, BOUNCE_SCALE);
-            setCenter(getCenter().getX(), origin.y
-                    + bounds.height - getSize().height / 2);
+            setCenter(getCenter().getX(), origin.y +
+                    bounds.height - getSize().height / 2);
         }
         impulse.scale(getVelocity().getRelativeMagnitude(impulse));
         return impulse;
@@ -258,7 +253,10 @@ public class Mass extends PhysicalObject {
     public void changeToDefaultColor() {
         myColor = DEFAULT_COLOR;
     }
-    
+
+    /**
+     * change the color to denote one that's controlled by the user.
+     */
     public void hide() {
         myColor = HIDDEN_COLOR; 
     }

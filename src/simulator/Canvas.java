@@ -17,13 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-<<<<<<< HEAD
-import physicalObject.Mass;
-import physicalObject.Spring;
-
-=======
 import physicalobject.Mass;
->>>>>>> origin/master
 
 /**
  * Creates an component that is a viewer onto an animation.
@@ -46,14 +40,6 @@ public class Canvas extends JComponent {
      */
     public static final int FRAMES_PER_SECOND = 25;
 
-<<<<<<< HEAD
-    private final int UNIT_CHANGE_IN_PIXELS = 10;
-    private final int ORIGINAL_WIDTH = 800;
-    private final int ORIGINAL_HEIGHT = 800;
-    private final int MINIMUM_WIDTH = 400;
-    private static final JFileChooser CHOOSER = new JFileChooser(System
-            .getProperties().getProperty("user.dir"));
-=======
     private static final int UNIT_CHANGE_IN_PIXELS = 10;
     private static final int ORIGINAL_WIDTH = 600;
     private static final int ORIGINAL_HEIGHT = 600;
@@ -63,9 +49,7 @@ public class Canvas extends JComponent {
     // the size of canvas that is to be changed by UP and DOWN keys
     private static Dimension ourSize;
     // the x, y value of the top-left origin point
-    private static Point ourOriginPoint;
-    // whether the global forces file is added
->>>>>>> origin/master
+    private static Point ourOriginPoint = new Point(0, 0);
     // user's game to be animated
     // a series of simulations
     private ArrayList<Simulation> myTargets = new ArrayList<Simulation>();
@@ -75,29 +59,25 @@ public class Canvas extends JComponent {
     private int myLastKeyPressed;
     // only one so that it maintains user's preferences
     private Point myLastMousePosition;
-    // the size of canvas that is to be changed by UP and DOWN keys
-    private static Dimension mySize;
-    // the x, y value of the top-left origin point
-    private static Point originPoint;
     // whether the global forces file is added
-    private boolean globalForcesApplied;
+    private boolean myGlobalForcesApplied;
     // the mass that's controlled by the mouse
     private Mass myControlledMass;
-    private Simulation userControlledSimulation;
+    private Simulation myUserControlledSimulation;
 
     /**
      * Initializes the canvas.
-     * 
+     *
      * @param size of the canvas
      */
     public Canvas (Dimension size) {
-        userControlledSimulation = null;
+        myUserControlledSimulation = null;
         myControlledMass = null;
-        globalForcesApplied = false;
-        originPoint = new Point(0, 0);
-        mySize = size;
+        myGlobalForcesApplied = false;
+        ourOriginPoint = new Point(0, 0);
+        ourSize = size;
         // request component size
-        setPreferredSize(mySize);
+        setPreferredSize(ourSize);
         // set component to receive user input
         setInputListeners();
         setFocusable(true);
@@ -122,12 +102,13 @@ public class Canvas extends JComponent {
 
     /**
      * Take one step in the animation.
-     * 
+     *
      * @param elapsedTime how much time has elapsed
      */
     public void step (double elapsedTime) {
-        for (Simulation s : myTargets)
+        for (Simulation s : myTargets) {
             s.update(elapsedTime);
+        }
         // indirectly causes paint to be called
         repaint();
     }
@@ -141,7 +122,7 @@ public class Canvas extends JComponent {
 
     /**
      * Returns the last key pressed by the player (or -1 if none pressed).
-     * 
+     *
      * @see java.awt.event.KeyEvent
      */
     public int getLastKeyPressed () {
@@ -160,27 +141,20 @@ public class Canvas extends JComponent {
      * Never called by you directly, instead called by Java runtime
      * when area of screen covered by this container needs to be
      * displayed (i.e., creation, uncovering, change in status)
-     * 
+     *
      * @param pen used to paint shape on the screen
      */
     @Override
     public void paintComponent (Graphics pen) {
-<<<<<<< HEAD
-        pen.setColor(Color.PINK);
-        int paintX = Math.max(originPoint.x, 0);
-        int paintY = Math.max(originPoint.y, 0);
-        int paintWidth = Math.min(mySize.width, ORIGINAL_WIDTH);
-        int paintHeight = Math.min(mySize.height, ORIGINAL_HEIGHT);
-=======
         pen.setColor(Color.LIGHT_GRAY);
         int paintX = Math.max(ourOriginPoint.x, 0);
         int paintY = Math.max(ourOriginPoint.y, 0);
         int paintWidth = Math.min(ourSize.width, ORIGINAL_WIDTH);
         int paintHeight = Math.min(ourSize.height, ORIGINAL_HEIGHT);
->>>>>>> origin/master
         pen.fillRect(paintX, paintY, paintWidth, paintHeight);
-        for (Simulation s : myTargets)
+        for (Simulation s : myTargets) {
             s.paint((Graphics2D) pen);
+        }
     }
 
     /**
@@ -202,6 +176,41 @@ public class Canvas extends JComponent {
         });
 
         myLastMousePosition = new Point();
+        setMouseMotionListener();
+        setMouseListener();
+    }
+
+    private void setMouseListener () {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed (MouseEvent e) {
+                if (outOfBound(e.getPoint())) {
+                    return;
+                }
+                highlight(myLastMousePosition);
+                if (myControlledMass == null) {
+                    findMinimumDistance(e.getPoint());
+                    if (myUserControlledSimulation != null) {
+                        myUserControlledSimulation.createUserObjects(e.getPoint());
+                    }
+                }
+            }
+
+            @Override
+            public void mouseReleased (MouseEvent e) {
+                if (myControlledMass != null) {
+                    myControlledMass.changeToDefaultColor();
+                    myControlledMass = null;
+                }
+                if (myUserControlledSimulation != null) {
+                    myUserControlledSimulation.deleteUserObjects(e.getPoint());
+                    myUserControlledSimulation = null;
+                }
+            }
+        });
+    }
+
+    private void setMouseMotionListener () {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved (MouseEvent e) {
@@ -214,56 +223,30 @@ public class Canvas extends JComponent {
                 if (myControlledMass != null) {
                     myControlledMass.setCenter(targetPosition);
                 }
-                if (userControlledSimulation != null) {
-                    userControlledSimulation.moveUserPoint(targetPosition);
+                if (myUserControlledSimulation != null) {
+                    myUserControlledSimulation.moveUserPoint(targetPosition);
                 }
             }
         });
+    }
 
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed (MouseEvent e) {
-                if (outOfBound(e.getPoint())) {
-                    return;
-                }
-                highlight(myLastMousePosition);
-                if (myControlledMass == null) {
-                    findMinimumDistance(e.getPoint());
-                    if (userControlledSimulation != null) {
-                        userControlledSimulation.createUserObjects(e.getPoint());
-                    }
-                }
+    private void findMinimumDistance (Point mousePoint) {
+        double minimumDistance = Double.MAX_VALUE;
+        myUserControlledSimulation = null;
+        for (Simulation s : myTargets) {
+            double distance = s.calculateMinimumDistance(mousePoint);
+            if (distance < minimumDistance) {
+                minimumDistance = distance;
+                myUserControlledSimulation = s;
             }
-            
-            private boolean outOfBound (Point mousePoint) {
-                return ((mousePoint.x < originPoint.x) || (mousePoint.x > originPoint.x + mySize.width)
-                        || (mousePoint.y < originPoint.y) || (mousePoint.y > originPoint.y + mySize.height));
-            }
+        }
+    }
 
-            private void findMinimumDistance (Point mousePoint) {
-                double minimumDistance = Double.MAX_VALUE;
-                userControlledSimulation = null;
-                for (Simulation s : myTargets) {
-                    double distance = s.calculateMinimumDistance(mousePoint);
-                    if (distance < minimumDistance) {
-                        minimumDistance = distance;
-                        userControlledSimulation = s;
-                    }
-                }
-            }
-
-            @Override
-            public void mouseReleased (MouseEvent e) {
-                if (myControlledMass != null) {
-                    myControlledMass.changeToDefaultColor();
-                    myControlledMass = null;
-                }
-                if (userControlledSimulation != null) {
-                    userControlledSimulation.deleteUserObjects(e.getPoint());
-                    userControlledSimulation = null;
-                }
-            }
-        });
+    private boolean outOfBound (Point mousePoint) {
+        return (mousePoint.x < ourOriginPoint.x) || 
+                (mousePoint.x > ourOriginPoint.x + ourSize.width) || 
+                (mousePoint.y < ourOriginPoint.y) || 
+                (mousePoint.y > ourOriginPoint.y + ourSize.height);
     }
 
     private void highlight (Point mousePosition) {
@@ -276,20 +259,20 @@ public class Canvas extends JComponent {
     }
 
     private void loadModel () {
-        final Factory factory = new Factory();
+        Factory myFactory = new Factory();
         int response = CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
             // initialize a new simulation
             myTargets.add(new Simulation(this));
-            factory.loadModel(myTargets.get(myTargets.size() - 1),
+            myFactory.loadModel(myTargets.get(myTargets.size() - 1),
                     CHOOSER.getSelectedFile());
         }
 
-        if (!globalForcesApplied) {
+        if (!myGlobalForcesApplied) {
             int optionalResponse = CHOOSER.showOpenDialog(null);
             if (optionalResponse == JFileChooser.APPROVE_OPTION) {
-                globalForcesApplied = true;
-                factory.loadModel(myTargets.get(myTargets.size() - 1),
+                myGlobalForcesApplied = true;
+                myFactory.loadModel(myTargets.get(myTargets.size() - 1),
                         CHOOSER.getSelectedFile());
             }
         }
@@ -299,6 +282,8 @@ public class Canvas extends JComponent {
         myTargets.clear();
     }
 
+    //Question: is there a way to avoid long methods in this case,
+    //where a lot of switch cases are required?
     private void manageSimulation (int keyCode) {
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
@@ -313,8 +298,9 @@ public class Canvas extends JComponent {
                 step((double) FRAMES_PER_SECOND / ONE_SECOND);
                 break;
             case KeyEvent.VK_P:
-                for (Simulation s : myTargets)
+                for (Simulation s : myTargets) {
                     System.out.println(s);
+                }
                 break;
             case KeyEvent.VK_N:
                 // load another model
@@ -322,39 +308,9 @@ public class Canvas extends JComponent {
                 break;
             case KeyEvent.VK_C:
                 // clear all models
-<<<<<<< HEAD
-                int myOption = JOptionPane
-                        .showConfirmDialog(this,
-                                "You seriously want to destroy all the lovely springies?");
-                if (myOption == 0) clearModel();
-                break;
-            case KeyEvent.VK_G:
-                for (Simulation s : myTargets)
-                    s.toggleGravity();
-                break;
-            case KeyEvent.VK_V:
-                for (Simulation s : myTargets)
-                    s.toggleViscosity();
-                break;
-            case KeyEvent.VK_1:
-                for (Simulation s : myTargets)
-                    s.toggleWall(1);
-                break;
-            case KeyEvent.VK_2:
-                for (Simulation s : myTargets)
-                    s.toggleWall(2);
-                break;
-            case KeyEvent.VK_3:
-                for (Simulation s : myTargets)
-                    s.toggleWall(3);
-                break;
-            case KeyEvent.VK_4:
-                for (Simulation s : myTargets)
-                    s.toggleWall(4);
-=======
                 int myOption = JOptionPane.showConfirmDialog(this,
-                        "You seriously want to destroy "
-                        + "all the lovely springies?");
+                        "You seriously want to destroy " +
+                        "all the lovely springies?");
                 if (myOption == 0) {
                     clearModel();
                 }
@@ -393,7 +349,6 @@ public class Canvas extends JComponent {
                 for (Simulation s : myTargets) {
                     s.toggleForce("leftwall");
                 }
->>>>>>> origin/master
                 break;
             case KeyEvent.VK_UP:
                 // increase the walled area in size
@@ -412,31 +367,38 @@ public class Canvas extends JComponent {
     /**
      * To make the size of the walled area increase by numberOfPixels on each
      * side.
-     * 
-     * @param numberOfPixels
+     *
+     * @param numberOfPixels the change of the number of pixels on each side of the walled area
      */
     private void changeSize (int numberOfPixels) {
-        if (mySize.width + 2 * numberOfPixels <= MINIMUM_WIDTH) {
+        if (ourSize.width + 2 * numberOfPixels <= MINIMUM_WIDTH) {
             System.out.println("The canvas size reaches minimum.");
             return;
         }
-        mySize.setSize(mySize.width + 2 * numberOfPixels, mySize.height + 2
-                * numberOfPixels);
+        ourSize.setSize(ourSize.width + 2 * numberOfPixels, ourSize.height + 2 *
+                numberOfPixels);
         changeOrigin(numberOfPixels);
-        System.out.println(originPoint);
-        System.out.println(mySize);
     }
 
+    /**
+     * @param numberOfPixels the number of pixels to be decreased
+     */
     private void changeOrigin (int numberOfPixels) {
-        originPoint.x -= numberOfPixels;
-        originPoint.y -= numberOfPixels;
+        ourOriginPoint.x -= numberOfPixels;
+        ourOriginPoint.y -= numberOfPixels;
     }
 
+    /**
+     * get the origin point of the walled area.
+     */
     public static Point getOrigin () {
-        return originPoint;
+        return ourOriginPoint;
     }
 
+    /**
+     * get the size of the walled area.
+     */
     public static Dimension getCanvasSize () {
-        return mySize;
+        return ourSize;
     }
 }
