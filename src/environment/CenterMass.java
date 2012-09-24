@@ -12,13 +12,14 @@ public class CenterMass extends GlobalForce {
     private double myMagnitude;
     private double myExponent;
     /**
+     * @param name the name of the force
      * @param x the x coordinate of the center of mass
      * @param y the y coordinate of the center of mass
      * @param mag the magnitude of the force
      * @param exp the exponent of the force
      */
-    public CenterMass(int x, int y, double mag, double exp) {
-        super();
+    public CenterMass (int x, int y, double mag, double exp) {
+        super("centermass");
         myCenter = new Point2D.Double(x, y);
         myMagnitude = mag;
         myExponent = exp;
@@ -41,5 +42,4 @@ public class CenterMass extends GlobalForce {
         }
         return f;
     }
-
 }

@@ -12,6 +12,7 @@ public class Viscosity extends GlobalForce {
      * @param res resistance constant of the viscosity
      */
     public Viscosity (double res) {
+        super("viscosity");
         myResistance = res;
     }
     /**

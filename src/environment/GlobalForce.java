@@ -9,11 +9,14 @@ import physicalobject.PhysicalObject;
  */
 public abstract class GlobalForce {
     private boolean myIsActive;
+    private String myType;
     /**
      * global forces are set to active by default.
+     * @param type the type of force
      */
-    public GlobalForce() {
+    public GlobalForce(String type) {
         myIsActive = true;
+        myType = type;
     }
     /**
      * @param m the mass on which the force is applied
@@ -36,9 +39,26 @@ public abstract class GlobalForce {
         return myIsActive;
     }
     /**
-     * toggles the activity of the force.
+     * For non-wall forces.
+     * @param type the type of force to be toggled
      */
-    public void toggleActivity() {
-        myIsActive = !myIsActive;
+    public void toggleActivity(String type) {
+        if (type.equals(myType)) {
+            String printString = "GlobalForce " + type;
+            if (myIsActive) {
+                printString += " off";
+            }
+            else {
+                printString += " on";
+            }
+            System.out.println(printString);
+            myIsActive = !myIsActive;
+        }
+    }
+    /**
+     * @param type the new type
+     */
+    public void setType(String type) {
+        myType = type;
     }
 }

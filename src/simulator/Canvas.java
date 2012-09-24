@@ -48,8 +48,8 @@ public class Canvas extends JComponent {
     private static final int RIGHT_WALL = 2;
     private static final int LEFT_WALL = 4;
     private static final int BOTTOM_WALL = 3;
-    private static final JFileChooser CHOOSER = new JFileChooser(System
-            .getProperties().getProperty("user.dir"));
+    private static final JFileChooser CHOOSER =
+            new JFileChooser(System.getProperties().getProperty("user.dir"));
     // the size of canvas that is to be changed by UP and DOWN keys
     private static Dimension ourSize;
     // the x, y value of the top-left origin point
@@ -267,37 +267,37 @@ public class Canvas extends JComponent {
                 break;
             case KeyEvent.VK_G:
                 for (Simulation s : myTargets) {
-                    s.toggleGravity();
+                    s.toggleForce("gravity");
                 }
                 break;
             case KeyEvent.VK_V:
                 for (Simulation s : myTargets) {
-                    s.toggleViscosity();
+                    s.toggleForce("viscosity");
                 }
                 break;
             case KeyEvent.VK_M:
                 for (Simulation s : myTargets) {
-                    s.toggleCenterMass();
+                    s.toggleForce("centermass");
                 }
                 break;
             case KeyEvent.VK_1:
                 for (Simulation s : myTargets) {
-                    s.toggleWall(TOP_WALL);
+                    s.toggleForce("topwall");
                 }
                 break;
             case KeyEvent.VK_2:
                 for (Simulation s : myTargets) {
-                    s.toggleWall(RIGHT_WALL);
+                    s.toggleForce("rightwall");
                 }
                 break;
             case KeyEvent.VK_3:
                 for (Simulation s : myTargets) {
-                    s.toggleWall(BOTTOM_WALL);
+                    s.toggleForce("bottomwall");
                 }
                 break;
             case KeyEvent.VK_4:
                 for (Simulation s : myTargets) {
-                    s.toggleWall(LEFT_WALL);
+                    s.toggleForce("leftwall");
                 }
                 break;
             case KeyEvent.VK_UP:

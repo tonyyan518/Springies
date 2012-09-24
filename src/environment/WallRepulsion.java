@@ -27,9 +27,11 @@ public class WallRepulsion extends GlobalForce {
      * @param exp the exponent
      */
     public WallRepulsion (int id, double mag, double exp) {
+        super("");
         myID = id;
         myMagnitude = mag;
         myExponent = exp;
+        setWallType(myID);
     }
     /**
      * @param m the mass on which the repulsion is applied
@@ -46,18 +48,19 @@ public class WallRepulsion extends GlobalForce {
         }
         else if (myID == RIGHT_WALL) {
             dir = LEFT;
-            dist = canvasOrigin.getX() + canvasDimension.width - m.getCenter().getX();
+            dist = canvasOrigin.getX()
+                    + canvasDimension.width - m.getCenter().getX();
         }
         else if (myID == BOTTOM_WALL) {
             dir = DOWN;
-            dist = canvasOrigin.getY() + canvasDimension.height - m.getCenter().getY();
+            dist = canvasOrigin.getY()
+                    + canvasDimension.height - m.getCenter().getY();
         }
         else if (myID == LEFT_WALL) {
             dir = RIGHT;
             dist = m.getCenter().getX() - canvasOrigin.getX();
         }
         double mag = myMagnitude / Math.pow(dist, myExponent);
-        System.out.println(mag);
         return new Vector(dir, mag);
     }
     /**
@@ -65,5 +68,19 @@ public class WallRepulsion extends GlobalForce {
      */
     public int getID() {
         return myID;
+    }
+    private void setWallType (int id) {
+        if (id == TOP_WALL) {
+            setType("topwall");
+        }
+        else if (id == RIGHT_WALL) {
+            setType("rightwall");
+        }
+        else if (id == BOTTOM_WALL) {
+            setType("bottomwall");
+        }
+        else if (id == LEFT_WALL) {
+            setType("leftwall");
+        }
     }
 }

@@ -1,29 +1,24 @@
 package simulator;
+
+import environment.GlobalForce;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
-import environment.CenterMass;
-import environment.GlobalForce;
-import environment.Gravity;
-import environment.Viscosity;
-import environment.WallRepulsion;
 import physicalobject.Mass;
 import physicalobject.PhysicalObject;
 
 
 /**
  * Simulates objects moving around in a bounded environment.
- * @author Robert C. Duvall 
+ * @author Robert C. Duvall
  * modified by tyy, Rex
  */
 public class Simulation {
+    private static List<GlobalForce> ourGlobalForces;
     private List<PhysicalObject> myObjects;
-    //the global force list contains forces global to all objects in all simulations
-    private static List<GlobalForce> myGlobalForces;
-    private Canvas myContainer;
 
     /**
      * Create a Canvas with the given size.
@@ -31,10 +26,9 @@ public class Simulation {
      */
     public Simulation (Canvas container) {
         myObjects = new ArrayList<PhysicalObject>();
-        //myGlobalForces list is only initialized once even there are multiple simulations
-        if (myGlobalForces == null)
-            myGlobalForces = new ArrayList<GlobalForce>();
-        myContainer = container;
+        if (ourGlobalForces == null) {
+            ourGlobalForces = new ArrayList<GlobalForce>();
+        }
     }
     /**
      * @param obj a PhysicalObject to be added
@@ -42,9 +36,11 @@ public class Simulation {
     public void add (PhysicalObject obj) {
         myObjects.add(obj);
     }
-    
+    /**
+     * @param f a new force to be added
+     */
     public void add (GlobalForce f) {
-        myGlobalForces.add(f);
+        ourGlobalForces.add(f);
     }
 
     /**
@@ -64,10 +60,9 @@ public class Simulation {
      * @param dt change in time
      */
     public void update (double dt) {
-        for (GlobalForce gf : myGlobalForces) {
+        for (GlobalForce gf : ourGlobalForces) {
             gf.applyToObject(myObjects);
         }
-        
         for (PhysicalObject obj : myObjects) {
             obj.update(this, dt);
         }
@@ -79,7 +74,9 @@ public class Simulation {
     public Dimension getSize () {
         return Canvas.getCanvasSize();
     }
-    
+    /**
+     * Returns origin of the game area.
+     */
     public Point getOrigin() {
         return Canvas.getOrigin();
     }
@@ -97,44 +94,23 @@ public class Simulation {
         }
         return null;
     }
-    
-    public void toggleGravity() {
-        for (GlobalForce f : myGlobalForces) {
-            if (f instanceof Gravity)
-                f.toggleActivity();
+    /**
+     * @param type the type of force to toggle
+     */
+    public void toggleForce(String type) {
+        for (GlobalForce f : ourGlobalForces) {
+            f.toggleActivity(type);
         }
     }
-    
-    public void toggleViscosity() {
-        for (GlobalForce f : myGlobalForces) {
-            if (f instanceof Viscosity)
-                f.toggleActivity();
-        }
-    }
-    
-    public void toggleCenterMass() {
-        for (GlobalForce f : myGlobalForces) {
-            if (f instanceof CenterMass) {
-                f.toggleActivity();
-                System.out.println("Center of Mass turned on/off");
-            }
-        }
-    }
-    
-    public void toggleWall(int id) {
-        for (GlobalForce f : myGlobalForces) {
-            if (f instanceof WallRepulsion) {
-                if (((WallRepulsion)f).getID() == id)
-                    f.toggleActivity();
-            }
-        }
-    }
-    
+    /**
+     * @param mousePosition the position of the mouse
+     */
     public Mass highlight(Point mousePosition) {
         for (PhysicalObject o: myObjects) {
             if (o instanceof Mass) {
                 Mass m = (Mass)o;
-                Rectangle myRect = new Rectangle(m.getLeft(), m.getTop(), m.getSize().width, m.getSize().height);
+                Rectangle myRect = new Rectangle(m.getLeft(), m.getTop(),
+                        m.getSize().width, m.getSize().height);
                 if (myRect.contains(mousePosition)) {
                     return m;
                 }

@@ -14,6 +14,7 @@ public class Gravity extends GlobalForce {
      * @param mag the magnitude of gravity
      */
     public Gravity (double dir, double mag) {
+        super("gravity");
         myDirection = dir;
         myMagnitude = mag;
     }
