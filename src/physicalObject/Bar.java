@@ -1,4 +1,4 @@
-package physicalObject;
+package physicalobject;
 import simulator.Simulation;
 import simulator.Vector;
 
@@ -25,13 +25,15 @@ public class Bar extends Spring {
         if (Math.abs(lenDiff) > AT_REST) {
             myStartMomentum = getSpeed(getStart());
             myEndMomentum = getSpeed(getEnd());
-            bar.setMagnitude(lenDiff * myStartMomentum / (myStartMomentum + myEndMomentum));
+            bar.setMagnitude(lenDiff * myStartMomentum
+                    / (myStartMomentum + myEndMomentum));
             getStart().move(bar);
             if (getStart().isMoving()) {
                 changeVelocity(getStart());
             }
             bar.negate();
-            bar.setMagnitude(lenDiff * myEndMomentum / (myStartMomentum + myEndMomentum));
+            bar.setMagnitude(lenDiff * myEndMomentum
+                    / (myStartMomentum + myEndMomentum));
             getEnd().move(bar);
         }
     }

@@ -17,9 +17,13 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+<<<<<<< HEAD
 import physicalObject.Mass;
 import physicalObject.Spring;
 
+=======
+import physicalobject.Mass;
+>>>>>>> origin/master
 
 /**
  * Creates an component that is a viewer onto an animation.
@@ -42,12 +46,26 @@ public class Canvas extends JComponent {
      */
     public static final int FRAMES_PER_SECOND = 25;
 
+<<<<<<< HEAD
     private final int UNIT_CHANGE_IN_PIXELS = 10;
     private final int ORIGINAL_WIDTH = 800;
     private final int ORIGINAL_HEIGHT = 800;
     private final int MINIMUM_WIDTH = 400;
     private static final JFileChooser CHOOSER = new JFileChooser(System
             .getProperties().getProperty("user.dir"));
+=======
+    private static final int UNIT_CHANGE_IN_PIXELS = 10;
+    private static final int ORIGINAL_WIDTH = 600;
+    private static final int ORIGINAL_HEIGHT = 600;
+    private static final int MINIMUM_WIDTH = 300;
+    private static final JFileChooser CHOOSER =
+            new JFileChooser(System.getProperties().getProperty("user.dir"));
+    // the size of canvas that is to be changed by UP and DOWN keys
+    private static Dimension ourSize;
+    // the x, y value of the top-left origin point
+    private static Point ourOriginPoint;
+    // whether the global forces file is added
+>>>>>>> origin/master
     // user's game to be animated
     // a series of simulations
     private ArrayList<Simulation> myTargets = new ArrayList<Simulation>();
@@ -147,11 +165,19 @@ public class Canvas extends JComponent {
      */
     @Override
     public void paintComponent (Graphics pen) {
+<<<<<<< HEAD
         pen.setColor(Color.PINK);
         int paintX = Math.max(originPoint.x, 0);
         int paintY = Math.max(originPoint.y, 0);
         int paintWidth = Math.min(mySize.width, ORIGINAL_WIDTH);
         int paintHeight = Math.min(mySize.height, ORIGINAL_HEIGHT);
+=======
+        pen.setColor(Color.LIGHT_GRAY);
+        int paintX = Math.max(ourOriginPoint.x, 0);
+        int paintY = Math.max(ourOriginPoint.y, 0);
+        int paintWidth = Math.min(ourSize.width, ORIGINAL_WIDTH);
+        int paintHeight = Math.min(ourSize.height, ORIGINAL_HEIGHT);
+>>>>>>> origin/master
         pen.fillRect(paintX, paintY, paintWidth, paintHeight);
         for (Simulation s : myTargets)
             s.paint((Graphics2D) pen);
@@ -296,6 +322,7 @@ public class Canvas extends JComponent {
                 break;
             case KeyEvent.VK_C:
                 // clear all models
+<<<<<<< HEAD
                 int myOption = JOptionPane
                         .showConfirmDialog(this,
                                 "You seriously want to destroy all the lovely springies?");
@@ -324,6 +351,49 @@ public class Canvas extends JComponent {
             case KeyEvent.VK_4:
                 for (Simulation s : myTargets)
                     s.toggleWall(4);
+=======
+                int myOption = JOptionPane.showConfirmDialog(this,
+                        "You seriously want to destroy "
+                        + "all the lovely springies?");
+                if (myOption == 0) {
+                    clearModel();
+                }
+                break;
+            case KeyEvent.VK_G:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("gravity");
+                }
+                break;
+            case KeyEvent.VK_V:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("viscosity");
+                }
+                break;
+            case KeyEvent.VK_M:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("centermass");
+                }
+                break;
+            case KeyEvent.VK_1:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("topwall");
+                }
+                break;
+            case KeyEvent.VK_2:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("rightwall");
+                }
+                break;
+            case KeyEvent.VK_3:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("bottomwall");
+                }
+                break;
+            case KeyEvent.VK_4:
+                for (Simulation s : myTargets) {
+                    s.toggleForce("leftwall");
+                }
+>>>>>>> origin/master
                 break;
             case KeyEvent.VK_UP:
                 // increase the walled area in size

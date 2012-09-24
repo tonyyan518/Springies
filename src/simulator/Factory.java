@@ -1,15 +1,15 @@
 package simulator;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import environment.CenterMass;
 import environment.Gravity;
 import environment.Viscosity;
 import environment.WallRepulsion;
-import physicalObject.Bar;
-import physicalObject.Mass;
-import physicalObject.Muscle;
-import physicalObject.Spring;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import physicalobject.Bar;
+import physicalobject.Mass;
+import physicalobject.Muscle;
+import physicalobject.Spring;
 
 /**
  * @author Robert C. Duvall
@@ -70,7 +70,8 @@ public class Factory {
         double ks = line.nextDouble();
         if (type.equals(MUSCLE)) {
             double amp = line.nextDouble();
-            return new Muscle(sim.getMass(m1), sim.getMass(m2), restLength, ks, amp);
+            return new Muscle(sim.getMass(m1), sim.getMass(m2),
+                    restLength, ks, amp);
         }
         else if (ks < 0) {
             return new Bar(sim.getMass(m1), sim.getMass(m2), restLength, ks);
@@ -83,12 +84,10 @@ public class Factory {
         double magnitude = line.nextDouble();
         return new Gravity(direction, magnitude);
     }
-    
     private Viscosity viscosityCommand (Scanner line) {
         double resistance = line.nextDouble();
         return new Viscosity(resistance);
     }
-    
     private CenterMass centerMassCommand (Scanner line) {
         int x = line.nextInt();
         int y = line.nextInt();
@@ -96,7 +95,6 @@ public class Factory {
         double exp = line.nextDouble();
         return new CenterMass(x, y, mag, exp);
     }
-    
     private WallRepulsion wallCommand (Scanner line) {
         int id = line.nextInt();
         double mag = line.nextDouble();

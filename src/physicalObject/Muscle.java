@@ -1,4 +1,4 @@
-package physicalObject;
+package physicalobject;
 import simulator.Simulation;
 
 /**
@@ -15,7 +15,8 @@ public class Muscle extends Spring {
      * @param kVal the spring constant
      * @param amp the amplitude
      */
-    public Muscle (Mass start, Mass end, double length, double kVal, double amp) {
+    public Muscle (Mass start, Mass end, double length,
+            double kVal, double amp) {
         super(start, end, length, kVal);
         myAmplitude = amp;
         myOriginalLength = length;

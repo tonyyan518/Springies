@@ -39,10 +39,7 @@ public class Vector {
      * @param target the target point
      */
     public Vector (Point2D source, Point2D target) {
-        double dx = target.getX() - source.getX();
-        double dy = source.getY() - target.getY();
-        setDirection(angleBetween(dx, dy));
-        setMagnitude(distanceBetween(dx, dy));
+        this(angleBetween(target, source), distanceBetween(target, source));
     }
 
     /**
@@ -94,6 +91,7 @@ public class Vector {
 
     /**
      * Sets this force's magnitude to the given value.
+     * @param value the new magnitude
      */
     public void setMagnitude (double value) {
         myMagnitude = value;
@@ -137,6 +135,7 @@ public class Vector {
 
     /**
      * Sets this force's direction to the given value.
+     * @param value the new magnitude
      */
     public void setDirection (double value) {
         myAngle = value;
@@ -189,8 +188,8 @@ public class Vector {
     }
 
     /**
-     * change the force to a force of the same magnitude, but in the opposite direction as
-     * the original force.
+     * change the force to a force of the same magnitude,
+     * but in the opposite direction as the original force.
      */
     public void negate () {
         turn(HALF_DEGREE);
@@ -215,8 +214,9 @@ public class Vector {
         final double epsilon = 0.000001;
         try {
             Vector other = (Vector) force;
-            return Math.abs(getMagnitude() - other.getMagnitude()) < epsilon && Math
-                    .abs(getDirection() - other.getDirection()) < epsilon;
+            return Math.abs(getMagnitude() - other.getMagnitude())
+                    < epsilon && Math.abs(getDirection()
+                            - other.getDirection()) < epsilon;
         }
         catch (ClassCastException e) {
             return false;
@@ -255,7 +255,7 @@ public class Vector {
      * @param p2 the second point
      */
     public static double angleBetween (Point2D p1, Point2D p2) {
-        return angleBetween(p1.getY() - p2.getY(), p1.getX() - p2.getX());
+        return angleBetween(p1.getX() - p2.getX(), p1.getY() - p2.getY());
     }
 
     /**

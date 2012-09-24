@@ -1,4 +1,4 @@
-package physicalObject;
+package physicalobject;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -20,9 +20,14 @@ public class Mass extends PhysicalObject {
     private static final int DOWN = 270;
     private static final int BOUNCE_SCALE = 2;
     private static final int MASS_DIM = 16;
+<<<<<<< HEAD
     private static final Color HIGHLIGHT_COLOR=Color.CYAN;
     private static final Color DEFAULT_COLOR=Color.BLACK;
     private static final Color HIDDEN_COLOR=Color.PINK;
+=======
+    private static final Color HIGHLIGHT_COLOR = Color.CYAN;
+    private static final Color DEFAULT_COLOR = Color.BLACK;
+>>>>>>> origin/master
     private Point2D myCenter;
     private Vector myVelocity;
     private Dimension mySize;
@@ -47,7 +52,9 @@ public class Mass extends PhysicalObject {
         setVelocity(0, 0);
         mySize = new Dimension(MASS_DIM, MASS_DIM);
     }
-
+    /**
+     * @param line create a mass based on the scanned line
+     */
     public static Mass createMass(Scanner line) {
         int id = line.nextInt();
         double x = line.nextDouble();
@@ -58,7 +65,6 @@ public class Mass extends PhysicalObject {
         }
         return new Mass(id, x, y, mass);
     }
-    
     /**
      * @param pen the pen
      */
@@ -106,23 +112,22 @@ public class Mass extends PhysicalObject {
             impulse = new Vector(RIGHT, BOUNCE_SCALE);
             setCenter(origin.x + getSize().width / 2, getCenter().getY());
         }
-        
         //this mass reaches the right wall
         else if (getRight() > origin.x + bounds.width) {
             impulse = new Vector(LEFT, BOUNCE_SCALE);
-            setCenter(origin.x + bounds.width - getSize().width / 2, getCenter().getY());
+            setCenter(origin.x + bounds.width - getSize().width
+                    / 2, getCenter().getY());
         }
-        
         //this mass reaches the top wall
         if (getTop() < origin.y) {
             impulse = new Vector(UP, BOUNCE_SCALE);
             setCenter(getCenter().getX(), origin.y + getSize().height / 2);
         }
-        
         //this mass reaches the bottom wall
         else if (getBottom() > origin.y + bounds.height) {
             impulse = new Vector(DOWN, BOUNCE_SCALE);
-            setCenter(getCenter().getX(), origin.y + bounds.height - getSize().height / 2);
+            setCenter(getCenter().getX(), origin.y
+                    + bounds.height - getSize().height / 2);
         }
         impulse.scale(getVelocity().getRelativeMagnitude(impulse));
         return impulse;
@@ -159,11 +164,12 @@ public class Mass extends PhysicalObject {
     public void setCenter (double x, double y) {
         myCenter = new Point2D.Double(x, y);
     }
-
+    /**
+     * @param p the new center
+     */
     public void setCenter (Point p) {
         myCenter = new Point2D.Double(p.x, p.y);
     }
-    
     /**
      * Returns shape's left-most coordinate.
      */
@@ -240,11 +246,15 @@ public class Mass extends PhysicalObject {
     public boolean isMoving() {
         return !myCenter.equals(myPrevPos);
     }
-    
+    /**
+     * highlight the mass.
+     */
     public void highlight() {
         myColor = HIGHLIGHT_COLOR;
     }
-    
+    /**
+     * change the color back to default.
+     */
     public void changeToDefaultColor() {
         myColor = DEFAULT_COLOR;
     }
