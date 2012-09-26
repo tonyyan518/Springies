@@ -1,5 +1,6 @@
 package environment;
 
+import java.util.Scanner;
 import physicalobject.Mass;
 import simulator.Vector;
 
@@ -15,6 +16,17 @@ public class Viscosity extends GlobalForce {
         super("viscosity");
         myResistance = res;
     }
+
+    /**
+     * create a Viscosity instance 
+     * @param line input to be handled
+     * @return A Viscosity object that is a global force
+     */
+    public static Viscosity createViscosity (Scanner line) {
+        double resistance = line.nextDouble();
+        return new Viscosity(resistance);
+    }
+
     /**
      * Viscosity applies a force in the opposite to the direction
      * of motion proportional to a mass's velocity.

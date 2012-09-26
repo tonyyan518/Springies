@@ -222,6 +222,14 @@ public class Vector {
     }
 
     /**
+     * as required by checkstyle, to override hashCode when equals is overriden
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    /**
      * Returns this force's values formatted as a string.
      */
     @Override

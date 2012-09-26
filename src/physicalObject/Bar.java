@@ -27,19 +27,22 @@ public class Bar extends Spring {
             myEndMomentum = getSpeed(getEnd());
             bar.setMagnitude(lenDiff * myStartMomentum / (myStartMomentum + myEndMomentum));
             getStart().move(bar);
-            if (getStart().isMoving()) {
-                changeVelocity(getStart());
-            }
+            changeVelocity(getStart());
+
+            //change the end point
             bar.negate();
             bar.setMagnitude(lenDiff * myEndMomentum / (myStartMomentum + myEndMomentum));
             getEnd().move(bar);
+            changeVelocity(getEnd());
         }
     }
     private double getSpeed(Mass m) {
         return m.getVelocity().getMagnitude() * m.getMass();
     }
     private void changeVelocity(Mass m) {
-        Vector v = new Vector(m.getPrevPos(), m.getCenter());
-        m.getVelocity().setDirection(-v.getAngle());
+        if (getStart().isMoving()) {
+            Vector v = new Vector(m.getPrevPos(), m.getCenter());
+            m.getVelocity().setDirection(-v.getAngle());
+        }
     }
 }

@@ -2,9 +2,11 @@ package environment;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
+import java.util.Scanner;
 import physicalobject.Mass;
 import simulator.Canvas;
 import simulator.Vector;
+
 
 /**
  * @author tyy
@@ -21,6 +23,7 @@ public class WallRepulsion extends GlobalForce {
     private int myID;
     private double myMagnitude;
     private double myExponent;
+
     /**
      * @param id the id of the wall
      * @param mag the magnitude
@@ -33,6 +36,19 @@ public class WallRepulsion extends GlobalForce {
         myExponent = exp;
         setWallType(myID);
     }
+
+    /**
+     * create a WallRepulsion instance 
+     * @param line input to be handled
+     * @return A WallRepulsion object that is a global force
+     */
+    public static WallRepulsion createWallRepulsion (Scanner line) {
+        int id = line.nextInt();
+        double mag = line.nextDouble();
+        double exp = line.nextDouble();
+        return new WallRepulsion(id, mag, exp);
+    }
+
     /**
      * @param m the mass on which the repulsion is applied
      */
@@ -61,12 +77,14 @@ public class WallRepulsion extends GlobalForce {
         double mag = myMagnitude / Math.pow(dist, myExponent);
         return new Vector(dir, mag);
     }
+
     /**
      * get the wall id.
      */
-    public int getID() {
+    public int getID () {
         return myID;
     }
+
     private void setWallType (int id) {
         if (id == TOP_WALL) {
             setType("topwall");

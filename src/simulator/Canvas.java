@@ -21,6 +21,7 @@ import physicalobject.Mass;
 
 /**
  * Creates an component that is a viewer onto an animation.
+ * 
  * @author Robert C. Duvall
  *         modified by tyy, Rex
  */
@@ -48,8 +49,7 @@ public class Canvas extends JComponent {
     // the size of canvas that is to be changed by UP and DOWN keys
     private static Dimension ourSize;
     // the x, y value of the top-left origin point
-    private static Point ourOriginPoint;
-    // whether the global forces file is added
+    private static Point ourOriginPoint = new Point(0, 0);
     // user's game to be animated
     // a series of simulations
     private ArrayList<Simulation> myTargets = new ArrayList<Simulation>();
@@ -59,15 +59,19 @@ public class Canvas extends JComponent {
     private int myLastKeyPressed;
     // only one so that it maintains user's preferences
     private Point myLastMousePosition;
+    // whether the global forces file is added
     private boolean myGlobalForcesApplied;
     // the mass that's controlled by the mouse
     private Mass myControlledMass;
+    private Simulation myUserControlledSimulation;
 
     /**
      * Initializes the canvas.
+     *
      * @param size of the canvas
      */
     public Canvas (Dimension size) {
+        myUserControlledSimulation = null;
         myControlledMass = null;
         myGlobalForcesApplied = false;
         ourOriginPoint = new Point(0, 0);
@@ -98,6 +102,7 @@ public class Canvas extends JComponent {
 
     /**
      * Take one step in the animation.
+     *
      * @param elapsedTime how much time has elapsed
      */
     public void step (double elapsedTime) {
@@ -117,6 +122,7 @@ public class Canvas extends JComponent {
 
     /**
      * Returns the last key pressed by the player (or -1 if none pressed).
+     *
      * @see java.awt.event.KeyEvent
      */
     public int getLastKeyPressed () {
@@ -135,6 +141,7 @@ public class Canvas extends JComponent {
      * Never called by you directly, instead called by Java runtime
      * when area of screen covered by this container needs to be
      * displayed (i.e., creation, uncovering, change in status)
+     *
      * @param pen used to paint shape on the screen
      */
     @Override
@@ -167,38 +174,83 @@ public class Canvas extends JComponent {
                 myLastKeyPressed = NO_KEY_PRESSED;
             }
         });
+
         myLastMousePosition = new Point();
-        addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseMoved (MouseEvent e) {
-                myLastMousePosition = e.getPoint();
-            }
-            @Override
-            public void mouseDragged (MouseEvent e) {
-                if (myControlledMass != null) {
-                    Point targetPosition = new Point(e.getPoint());
-                    //regulatePointWithinFrame(targetPosition);
-                    myControlledMass.setCenter(targetPosition);
-                }
-            }
-        });
+        setMouseMotionListener();
+        setMouseListener();
+    }
+
+    private void setMouseListener () {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed (MouseEvent e) {
+                if (outOfBound(e.getPoint())) {
+                    return;
+                }
                 highlight(myLastMousePosition);
+                if (myControlledMass == null) {
+                    findMinimumDistance(e.getPoint());
+                    if (myUserControlledSimulation != null) {
+                        myUserControlledSimulation.createUserObjects(e.getPoint());
+                    }
+                }
             }
+
             @Override
             public void mouseReleased (MouseEvent e) {
                 if (myControlledMass != null) {
                     myControlledMass.changeToDefaultColor();
                     myControlledMass = null;
                 }
+                if (myUserControlledSimulation != null) {
+                    myUserControlledSimulation.deleteUserObjects(e.getPoint());
+                    myUserControlledSimulation = null;
+                }
             }
         });
     }
 
-    private void highlight(Point mousePosition) {
-        for (Simulation s: myTargets) {
+    private void setMouseMotionListener () {
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved (MouseEvent e) {
+                myLastMousePosition = e.getPoint();
+            }
+
+            @Override
+            public void mouseDragged (MouseEvent e) {
+                Point targetPosition = new Point(e.getPoint());
+                if (myControlledMass != null) {
+                    myControlledMass.setCenter(targetPosition);
+                }
+                if (myUserControlledSimulation != null) {
+                    myUserControlledSimulation.moveUserPoint(targetPosition);
+                }
+            }
+        });
+    }
+
+    private void findMinimumDistance (Point mousePoint) {
+        double minimumDistance = Double.MAX_VALUE;
+        myUserControlledSimulation = null;
+        for (Simulation s : myTargets) {
+            double distance = s.calculateMinimumDistance(mousePoint);
+            if (distance < minimumDistance) {
+                minimumDistance = distance;
+                myUserControlledSimulation = s;
+            }
+        }
+    }
+
+    private boolean outOfBound (Point mousePoint) {
+        return (mousePoint.x < ourOriginPoint.x) || 
+                (mousePoint.x > ourOriginPoint.x + ourSize.width) || 
+                (mousePoint.y < ourOriginPoint.y) || 
+                (mousePoint.y > ourOriginPoint.y + ourSize.height);
+    }
+
+    private void highlight (Point mousePosition) {
+        for (Simulation s : myTargets) {
             myControlledMass = s.highlight(mousePosition);
         }
         if (myControlledMass != null) {
@@ -230,6 +282,8 @@ public class Canvas extends JComponent {
         myTargets.clear();
     }
 
+    //Question: is there a way to avoid long methods in this case,
+    //where a lot of switch cases are required?
     private void manageSimulation (int keyCode) {
         switch (keyCode) {
             case KeyEvent.VK_SPACE:
@@ -312,7 +366,8 @@ public class Canvas extends JComponent {
     /**
      * To make the size of the walled area increase by numberOfPixels on each
      * side.
-     * @param numberOfPixels
+     *
+     * @param numberOfPixels the change of the number of pixels on each side of the walled area
      */
     private void changeSize (int numberOfPixels) {
         if (ourSize.width + 2 * numberOfPixels <= MINIMUM_WIDTH) {
@@ -321,22 +376,25 @@ public class Canvas extends JComponent {
         }
         ourSize.setSize(ourSize.width + 2 * numberOfPixels, ourSize.height + 2 * numberOfPixels);
         changeOrigin(numberOfPixels);
-        System.out.println(ourOriginPoint);
-        System.out.println(ourSize);
     }
 
+    /**
+     * @param numberOfPixels the number of pixels to be decreased
+     */
     private void changeOrigin (int numberOfPixels) {
         ourOriginPoint.x -= numberOfPixels;
         ourOriginPoint.y -= numberOfPixels;
     }
+
     /**
-     * gets the origin of our canvas.
+     * get the origin point of the walled area.
      */
     public static Point getOrigin () {
         return ourOriginPoint;
     }
+
     /**
-     * gets the size of our canvas.
+     * get the size of the walled area.
      */
     public static Dimension getCanvasSize () {
         return ourSize;
